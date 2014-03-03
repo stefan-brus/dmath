@@ -6,7 +6,7 @@ MAIN_EXE = dmath.exe
 
 # dmd flags
 DCC = dmd
-DFLAGS = -debug
+DFLAGS = -debug -gc
 
 
 # Targets
