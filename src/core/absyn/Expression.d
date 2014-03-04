@@ -131,3 +131,24 @@ public class Add : BinOp
         super(&plus);
     }
 }
+
+/**
+ * Subtraction operator class
+ */
+
+public class Sub : BinOp
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        double minus(Exp left, Exp right)
+        {
+            return left.eval - right.eval;
+        }
+
+        super(&minus);
+    }
+}

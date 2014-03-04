@@ -148,6 +148,22 @@ public class PlusToken : OpToken
     }
 }
 
+/**
+ * Minus token class
+ */
+
+public class MinusToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"-", 10, true);
+    }
+}
+
 
 /**
  * Creates a number token from the given string
@@ -191,6 +207,8 @@ public bool isOperator ( char[] str )
     {
         case "+":
             return true;
+        case "-":
+            return true;
         default:
             return false;
     }
@@ -220,6 +238,9 @@ body
     {
         case "+":
             result = new PlusToken;
+            break;
+        case "-":
+            result = new MinusToken;
             break;
         default:
             assert(false, "Unknown operator");

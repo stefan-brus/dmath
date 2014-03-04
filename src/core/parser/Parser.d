@@ -159,6 +159,10 @@ public class Parser
         {
             this.post_queue.enqueue(cast(PlusToken)token);
         }
+        else if ( cast(MinusToken)token )
+        {
+            this.post_queue.enqueue(cast(MinusToken)token);
+        }
     }
 
 
