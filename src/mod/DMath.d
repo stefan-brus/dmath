@@ -54,6 +54,9 @@ public class DMath
 
     /**
      * Main program logic function
+     *
+     * If the tokenizer only returns one token, and it is a string
+     * This class will try to handle it as a command
      */
     public void run ( )
     {
@@ -67,6 +70,11 @@ public class DMath
             stdin.readln(input_buf);
 
             auto tokens = tokenizer.parse(strip(input_buf));
+
+            if ( tokens.length == 1 && tokens[0].str == "quit" )
+            {
+                return;
+            }
 
             Exp exp = this.parser.parse(tokens);
 

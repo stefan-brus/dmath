@@ -54,6 +54,26 @@ public class Token
 
 
 /**
+ * String token class
+ */
+
+public class StrToken : Token
+{
+    /**
+     * Constructor
+     *
+     * Params:
+     *      str = The string representation of this token
+     */
+
+    public this ( char[] str )
+    {
+        super(str);
+    }
+}
+
+
+/**
  * Number token class
  * Stores the value internally as a double
  */
@@ -222,6 +242,22 @@ body
     result = new NumToken(str, value);
 
     return result;
+}
+
+
+/**
+ * Creates a string token from the given string
+ *
+ * Params:
+ *      str = The string
+ *
+ * Returns:
+ *      A string token
+ */
+
+public StrToken createString ( char[] str )
+{
+    return new StrToken(str);
 }
 
 /**

@@ -17,6 +17,8 @@ module src.core.parser.InputTokenizer;
 
 private import src.core.parser.Tokens;
 
+private import src.core.util.String;
+
 private import std.ascii;
 
 private import std.string;
@@ -34,6 +36,13 @@ public class InputTokenizer
      */
 
     private char[] number_buf;
+
+
+    /**
+     * Buffer for the string token currently being parsed
+     */
+
+    private char[] str_buf;
 
 
     /**
@@ -56,6 +65,10 @@ public class InputTokenizer
             {
                 this.number_buf ~= c;
             }
+            else if ( isValidChar(c) )
+            {
+                this.str_buf ~= c;
+            }
             else
             {
                 Token token;
@@ -66,13 +79,15 @@ public class InputTokenizer
                     this.number_buf.length = 0;
                 }
 
+                if ( this.str_buf.length > 0 )
+                {
+                    tokens ~= this.addStrToken;
+                    this.str_buf.length = 0;
+                }
+
                 if ( isOperator([c]) )
                 {
                     token = createOperator([c]);
-                }
-                else
-                {
-                    token = new Token([c]);
                 }
 
                 tokens ~= token;
@@ -83,6 +98,12 @@ public class InputTokenizer
         {
             tokens ~= this.addNumberToken;
             this.number_buf.length = 0;
+        }
+
+        if ( this.str_buf.length > 0 )
+        {
+            tokens ~= this.addStrToken;
+            this.str_buf.length = 0;
         }
 
         return tokens;
@@ -100,5 +121,18 @@ public class InputTokenizer
     private NumToken addNumberToken ( )
     {
         return createNumber(this.number_buf);
+    }
+
+
+    /**
+     * Creates a new string token from the string buffer
+     *
+     * Returns:
+     *      the created string token
+     */
+
+    private StrToken addStrToken ( )
+    {
+        return createString(this.str_buf);
     }
 }
