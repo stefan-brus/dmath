@@ -184,27 +184,9 @@ public class Parser
 
         while ( this.post_queue.size > 0 )
         {
-            auto tok = this.post_queue.dequeue;
+            auto token = this.post_queue.dequeue;
 
-            if ( cast(NumToken)tok )
-            {
-                auto exp = new Num((cast(NumToken)tok).value);
-                this.exp_stack.push(exp);
-            }
-            else if ( cast(PlusToken)tok )
-            {
-                auto exp = new Add;
-                exp.right = this.exp_stack.pop;
-                exp.left = this.exp_stack.pop;
-                this.exp_stack.push(exp);
-            }
-            else if ( cast(MinusToken)tok )
-            {
-                auto exp = new Sub;
-                exp.right = this.exp_stack.pop;
-                exp.left = this.exp_stack.pop;
-                this.exp_stack.push(exp);
-            }
+            this.addExp(token);
         }
 
         if ( this.exp_stack.size == 1)
@@ -213,5 +195,62 @@ public class Parser
         }
 
         return result;
+    }
+
+
+    /**
+     * Adds an expression to the stack based on the given token
+     *
+     * Params:
+     *      token = The token
+     *
+     * Throws:
+     *      ParseException: If unknown token is given
+     */
+
+    private void addExp ( Token token )
+    {
+        if ( cast(NumToken)token )
+        {
+            this.addNum(cast(NumToken)token);
+        }
+        else if ( cast(PlusToken)token )
+        {
+            this.addBinOp!Add;
+        }
+        else if ( cast(MinusToken)token )
+        {
+            this.addBinOp!Sub;
+        }
+    }
+
+
+    /**
+     * Adds a number expression to the stack based on the given token
+     *
+     * Params:
+     *      token = The token to get the value from
+     */
+
+    private void addNum ( NumToken token )
+    {
+        auto exp = new Num(token.value);
+        this.exp_stack.push(exp);
+    }
+
+
+    /**
+     * Adds a binary operation expression of the given type to the stack
+     *
+     * Template Params:
+     *      T = The expression type to add to the stack
+     */
+
+    private void addBinOp ( T : BinOp ) ( )
+    {
+        auto exp = new T;
+        exp.right = this.exp_stack.pop;
+        exp.left = this.exp_stack.pop;
+        this.exp_stack.push(exp);
     }
 }
