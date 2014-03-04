@@ -166,6 +166,23 @@ public class MinusToken : OpToken
 
 
 /**
+ * Multiplication token class
+ */
+
+public class MultiToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"*", 20, true);
+    }
+}
+
+
+/**
  * Creates a number token from the given string
  *
  * Params:
@@ -209,6 +226,8 @@ public bool isOperator ( char[] str )
             return true;
         case "-":
             return true;
+        case "*":
+            return true;
         default:
             return false;
     }
@@ -241,6 +260,9 @@ body
             break;
         case "-":
             result = new MinusToken;
+            break;
+        case "*":
+            result = new MultiToken;
             break;
         default:
             assert(false, "Unknown operator");

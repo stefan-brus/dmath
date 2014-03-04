@@ -163,6 +163,10 @@ public class Parser
         {
             this.post_queue.enqueue(cast(MinusToken)token);
         }
+        else if ( cast(MultiToken)token )
+        {
+            this.post_queue.enqueue(cast(MultiToken)token);
+        }
     }
 
 
@@ -221,6 +225,10 @@ public class Parser
         else if ( cast(MinusToken)token )
         {
             this.addBinOp!Sub;
+        }
+        else if ( cast(MultiToken)token )
+        {
+            this.addBinOp!Multi;
         }
     }
 

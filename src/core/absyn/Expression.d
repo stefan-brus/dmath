@@ -152,3 +152,24 @@ public class Sub : BinOp
         super(&minus);
     }
 }
+
+/**
+ * Multiplication operator class
+ */
+
+public class Multi : BinOp
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        double multiply(Exp left, Exp right)
+        {
+            return left.eval * right.eval;
+        }
+
+        super(&multiply);
+    }
+}
