@@ -6,6 +6,15 @@ module src.core.parser.Tokens;
 
 
 /**
+ * Imports
+ */
+
+private import std.conv;
+
+private import std.string;
+
+
+/**
  * Base token class
  */
 
@@ -29,6 +38,7 @@ public class Token
         this._str = str;
     }
 
+
     /**
      * Convert this token to a string
      *
@@ -40,4 +50,180 @@ public class Token
     {
         return this._str;
     }
+}
+
+
+/**
+ * Number token class
+ * Stores the value internally as a double
+ */
+
+public class NumToken : Token
+{
+
+    /**
+     * The value of this number
+     */
+
+    private double _value;
+
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      str = The string representation of this token
+     *      value = The value of this number
+     */
+    public this ( char[] str, double value )
+    {
+        super(str);
+        this._value = value;
+    }
+
+
+    /**
+     * Get the numeric value of this token
+     */
+
+    public double value ( )
+    {
+        return this._value;
+    }
+}
+
+
+/**
+ * Base operator token class
+ */
+
+public class OpToken : Token
+{
+    /**
+     * The precedence of this operator
+     */
+
+    public const uint precedence;
+
+
+    /**
+     * Whether or not this operator is left associative
+     */
+
+    public const bool left_assoc;
+
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      str = The token string
+     *      precedence = This operator's precedence
+     *      left_assoc = Whether or not this operator is left associative
+     */
+
+    public this ( char[] str, uint precedence, bool left_assoc )
+    {
+        super(str);
+        this.precedence = precedence;
+        this.left_assoc = left_assoc;
+    }
+}
+
+
+/**
+ * Plus token class
+ */
+
+public class PlusToken : OpToken
+{
+
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"+", 10, true);
+    }
+}
+
+
+/**
+ * Creates a number token from the given string
+ *
+ * Params:
+ *      str = The number string
+ *
+ * Returns:
+ *      A number token
+ */
+
+public NumToken createNumber ( char[] str )
+in
+{
+    assert(isNumeric(str), "Invalid number string");
+}
+body
+{
+    NumToken result;
+
+    double value = to!double(str);
+
+    result = new NumToken(str, value);
+
+    return result;
+}
+
+/**
+ * Checks if a given string is an operator
+ *
+ * Params:
+ *      str = The string to check
+ *
+ * Returns:
+ *      True if str is an operator, false otherwise
+ */
+
+public bool isOperator ( char[] str )
+{
+    switch ( str )
+    {
+        case "+":
+            return true;
+        default:
+            return false;
+    }
+}
+
+
+/**
+ * Creates an operator token from the given string
+ *
+ * Params:
+ *      str = The operator string
+ *
+ * Returns:
+ *      An operator token
+ */
+
+public OpToken createOperator ( char[] str )
+in
+{
+    assert(isOperator(str), "Invalid operator string");
+}
+body
+{
+    OpToken result;
+
+    switch ( str )
+    {
+        case "+":
+            result = new PlusToken;
+            break;
+        default:
+            assert(false, "Unknown operator");
+    }
+
+    return result;
 }

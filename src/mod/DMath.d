@@ -9,7 +9,11 @@ module src.mod.DMath;
  * Imports
  */
 
+private import src.core.absyn.Expression;
+
 private import src.core.parser.InputTokenizer;
+
+private import src.core.parser.Parser;
 
 private import std.stdio;
 
@@ -31,12 +35,20 @@ public class DMath
 
 
     /**
+     * Parser
+     */
+
+    private Parser parser;
+
+
+    /**
      * Constructor
      */
 
     public this ( )
     {
         this.tokenizer = new InputTokenizer;
+        this.parser = new Parser;
     }
 
 
@@ -56,12 +68,9 @@ public class DMath
 
             auto tokens = tokenizer.parse(strip(input_buf));
 
-            foreach ( t; tokens )
-            {
-                writef(t.str);
-            }
+            Exp exp = this.parser.parse(tokens);
 
-            writefln("");
+            writefln("%s", exp.eval);
         }
     }
 }
