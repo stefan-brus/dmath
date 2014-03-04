@@ -173,3 +173,29 @@ public class Multi : BinOp
         super(&multiply);
     }
 }
+
+/**
+ * Division operator class
+ */
+
+public class Div : BinOp
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        double divide(Exp left, Exp right)
+        in
+        {
+            assert(right.eval != 0, "Division by zero");
+        }
+        body
+        {
+            return left.eval / right.eval;
+        }
+
+        super(&divide);
+    }
+}

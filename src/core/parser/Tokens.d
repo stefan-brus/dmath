@@ -181,6 +181,22 @@ public class MultiToken : OpToken
     }
 }
 
+/**
+ * Division token class
+ */
+
+public class DivToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"/", 20, true);
+    }
+}
+
 
 /**
  * Creates a number token from the given string
@@ -228,6 +244,8 @@ public bool isOperator ( char[] str )
             return true;
         case "*":
             return true;
+        case "/":
+            return true;
         default:
             return false;
     }
@@ -263,6 +281,9 @@ body
             break;
         case "*":
             result = new MultiToken;
+            break;
+        case "/":
+            result = new DivToken;
             break;
         default:
             assert(false, "Unknown operator");

@@ -167,6 +167,10 @@ public class Parser
         {
             this.post_queue.enqueue(cast(MultiToken)token);
         }
+        else if ( cast(DivToken)token )
+        {
+            this.post_queue.enqueue(cast(DivToken)token);
+        }
     }
 
 
@@ -229,6 +233,10 @@ public class Parser
         else if ( cast(MultiToken)token )
         {
             this.addBinOp!Multi;
+        }
+        else if ( cast(DivToken)token )
+        {
+            this.addBinOp!Div;
         }
     }
 
