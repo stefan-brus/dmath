@@ -73,7 +73,7 @@ public class Stack ( T )
         {
             return this.elms[this.elms.length - 1];
         }
-        return null;
+        return T.init;
     }
 
 
@@ -117,4 +117,42 @@ public class Stack ( T )
     {
         this.elms.length = 0;
     }
+}
+
+
+/**
+ * Unittests
+ */
+
+unittest
+{
+    /**
+     * Error message
+     */
+
+    const err_msg = "Stack unittests failed";
+
+
+    /**
+     * Stack tests
+     */
+
+    auto stack = new Stack!uint;
+    assert(stack.size == 0, err_msg);
+
+    stack.push(12);
+    assert(stack.size == 1, err_msg);
+    assert(stack.top == 12, err_msg);
+
+    stack.push(42);
+    stack.push(89);
+    assert(stack.size == 3, err_msg);
+    assert(stack.top == 89, err_msg);
+
+    assert(stack.pop == 89, err_msg);
+    assert(stack.size == 2, err_msg);
+    assert(stack.top == 42, err_msg);
+
+    stack.clear;
+    assert(stack.size == 0, err_msg);
 }
