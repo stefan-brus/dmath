@@ -6,6 +6,13 @@ module src.core.absyn.Expression;
 
 
 /**
+ * Imports
+ */
+
+private import std.conv;
+
+
+/**
  * Base expression class
  */
 
@@ -132,6 +139,7 @@ public class Add : BinOp
     }
 }
 
+
 /**
  * Subtraction operator class
  */
@@ -153,6 +161,7 @@ public class Sub : BinOp
     }
 }
 
+
 /**
  * Multiplication operator class
  */
@@ -173,6 +182,7 @@ public class Multi : BinOp
         super(&multiply);
     }
 }
+
 
 /**
  * Division operator class
@@ -197,5 +207,61 @@ public class Div : BinOp
         }
 
         super(&divide);
+    }
+}
+
+
+/**
+ * Power operator class
+ *
+ * Currently only supports positive integers in the exponent
+ * Decimal numbers are rounded, negative numbers throw an error
+ */
+
+public class Pow : BinOp
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        double power(Exp left, Exp right)
+        in
+        {
+            assert(right.eval >= 0, "Negative exponent");
+        }
+        body
+        {
+            return this.power(left.eval, to!uint(right.eval));
+        }
+
+        super(&power);
+    }
+
+
+    /**
+     * Iterative power calculator function
+     *
+     * Params:
+     *      num = The number
+     *      exp = The exponent
+     */
+
+    private double power ( double num, uint exp )
+    {
+        if ( exp == 0 )
+        {
+            return 1;
+        }
+
+        double result = num;
+
+        for ( uint i = 1; i < exp; i++ )
+        {
+            result *= num;
+        }
+
+        return result;;
     }
 }

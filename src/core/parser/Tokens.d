@@ -219,6 +219,23 @@ public class DivToken : OpToken
 
 
 /**
+ * Exponent token class
+ */
+
+public class ExpToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"^", 30, false);
+    }
+}
+
+
+/**
  * Creates a number token from the given string
  *
  * Params:
@@ -282,6 +299,8 @@ public bool isOperator ( char[] str )
             return true;
         case "/":
             return true;
+        case "^":
+            return true;
         default:
             return false;
     }
@@ -320,6 +339,9 @@ body
             break;
         case "/":
             result = new DivToken;
+            break;
+        case "^":
+            result = new ExpToken;
             break;
         default:
             assert(false, "Unknown operator");

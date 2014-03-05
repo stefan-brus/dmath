@@ -210,6 +210,10 @@ public class Parser
         {
             this.post_queue.enqueue(cast(DivToken)token);
         }
+        else if ( cast(ExpToken)token )
+        {
+            this.post_queue.enqueue(cast(ExpToken)token);
+        }
         else
         {
             auto msg = "Unknown operator: " ~ token.str;
@@ -281,6 +285,10 @@ public class Parser
         else if ( cast(DivToken)token )
         {
             this.addBinOp!Div;
+        }
+        else if ( cast(ExpToken)token )
+        {
+            this.addBinOp!Pow;
         }
         else
         {
