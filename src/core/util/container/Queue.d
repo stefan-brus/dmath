@@ -72,7 +72,7 @@ public class Queue ( T )
         {
             return this.elms[0];
         }
-        return null;
+        return T.init;
     }
 
 
@@ -116,4 +116,42 @@ public class Queue ( T )
     {
         this.elms.length = 0;
     }
+}
+
+
+/**
+ * Unittests
+ */
+
+unittest
+{
+    /**
+     * Error message
+     */
+
+    const err_msg = "Queue unittests failed";
+
+
+    /**
+     * Queue tests
+     */
+
+    auto queue = new Queue!uint;
+    assert(queue.size == 0, err_msg);
+
+    queue.enqueue(12);
+    assert(queue.size == 1, err_msg);
+    assert(queue.front == 12, err_msg);
+
+    queue.enqueue(42);
+    queue.enqueue(89);
+    assert(queue.size == 3, err_msg);
+    assert(queue.front == 12, err_msg);
+
+    assert(queue.dequeue == 12, err_msg);
+    assert(queue.size == 2, err_msg);
+    assert(queue.front == 42, err_msg);
+
+    queue.clear;
+    assert(queue.size == 0, err_msg);
 }
