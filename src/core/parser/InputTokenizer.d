@@ -46,7 +46,16 @@ public class InputTokenizer
 
 
     /**
+     * Buffer for the whitespace-stripped input string
+     */
+
+    private char[] stripped_str;
+
+
+    /**
      * Parses a string into an array of tokens
+     *
+     * Strips whitespace from the given string
      *
      * Params:
      *      str = The string to parse
@@ -54,14 +63,20 @@ public class InputTokenizer
      * Returns:
      *      The array of tokens found in the string
      */
-
+    private import std.stdio;
     public Token[] parse ( char[] str )
     {
         Token[] tokens;
 
-        foreach ( c; str )
+        this.stripped_str = removeWhitespace(str);
+
+        foreach ( i, c; this.stripped_str )
         {
-            if ( isNumeric([c]) || c == '.' )
+            if ( isNegativeNum(i, c) )
+            {
+                this.number_buf ~= c;
+            }
+            else if ( isNumeric([c]) || c == '.' )
             {
                 this.number_buf ~= c;
             }
@@ -118,6 +133,36 @@ public class InputTokenizer
     {
         this.number_buf.length = 0;
         this.str_buf.length = 0;
+        this.stripped_str.length = 0;
+    }
+
+
+    /**
+     * Checks if a given index and character from the stripped string
+     * is the beginning of a negative number
+     *
+     * Peeks at the next and previous tokens to determine if a dash is
+     * the start of a negative number or not.
+     *
+     * Params:
+     *      i = The index
+     *      c = The character
+     *
+     * Returns:
+     *      True if it is at the start of a negative number, false otherwise
+     */
+
+    private bool isNegativeNum ( uint i, char c )
+    {
+        if ( (c == '-' && i < this.stripped_str.length - 1 && isNumeric([ this.stripped_str[i + 1] ])) &&
+             (i == 0 || isOperator([ this.stripped_str[i - 1] ])) )
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 
