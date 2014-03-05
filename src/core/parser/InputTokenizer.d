@@ -53,6 +53,13 @@ public class InputTokenizer
 
 
     /**
+     * Buffer for parsed tokens
+     */
+
+    private Token[] token_buf;
+
+
+    /**
      * Parses a string into an array of tokens
      *
      * Strips whitespace from the given string
@@ -66,7 +73,7 @@ public class InputTokenizer
     private import std.stdio;
     public Token[] parse ( char[] str )
     {
-        Token[] tokens;
+        this.token_buf.length = 0;
 
         this.stripped_str = removeWhitespace(str);
 
@@ -88,40 +95,20 @@ public class InputTokenizer
             {
                 Token token;
 
-                if ( this.number_buf.length > 0 )
-                {
-                    tokens ~= this.addNumberToken;
-                    this.number_buf.length = 0;
-                }
-
-                if ( this.str_buf.length > 0 )
-                {
-                    tokens ~= this.addStrToken;
-                    this.str_buf.length = 0;
-                }
+                this.addBufferedTokens;
 
                 if ( isOperator([c]) )
                 {
                     token = createOperator([c]);
                 }
 
-                tokens ~= token;
+                this.token_buf ~= token;
             }
         }
 
-        if ( this.number_buf.length > 0 )
-        {
-            tokens ~= this.addNumberToken;
-            this.number_buf.length = 0;
-        }
+        this.addBufferedTokens;
 
-        if ( this.str_buf.length > 0 )
-        {
-            tokens ~= this.addStrToken;
-            this.str_buf.length = 0;
-        }
-
-        return tokens;
+        return this.token_buf;
     }
 
 
@@ -134,6 +121,27 @@ public class InputTokenizer
         this.number_buf.length = 0;
         this.str_buf.length = 0;
         this.stripped_str.length = 0;
+        this.token_buf.length = 0;
+    }
+
+
+    /**
+     * Adds tokens from the number and string buffers
+     */
+
+    private void addBufferedTokens ( )
+    {
+        if ( this.number_buf.length > 0 )
+        {
+            this.token_buf ~= this.addNumberToken;
+            this.number_buf.length = 0;
+        }
+
+        if ( this.str_buf.length > 0 )
+        {
+            this.token_buf ~= this.addStrToken;
+            this.str_buf.length = 0;
+        }
     }
 
 
