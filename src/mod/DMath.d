@@ -62,7 +62,7 @@ public class DMath
     {
         char[] input_buf;
 
-        writefln("Welcome to DMath.\nEnter commands, or type 'quit' to quit.");
+        writefln("Welcome to DMath.\nEnter expressions, or type 'quit' to quit.");
 
         while(strip(input_buf) != "quit")
         {
