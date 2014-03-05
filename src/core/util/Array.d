@@ -22,6 +22,7 @@ module src.core.util.Array;
 public T[] remove ( T ) ( T[] arr, size_t idx )
 in
 {
+    assert(arr.length, "Empty array");
     assert(idx < arr.length, "Index out of bounds");
 }
 body
@@ -56,4 +57,37 @@ body
     }
 
     return result;
+}
+
+
+/**
+ * Unittests
+ */
+
+unittest
+{
+    /**
+     * Error message
+     */
+
+    const err_msg = "Array unittests failed";
+
+
+    /**
+     * remove
+     */
+
+    int[] arr = [1, 3, 5, 79, 616];
+
+    arr = remove(arr, 2);
+    assert(arr.length == 4, err_msg);
+    assert(arr[2] == 79, err_msg);
+
+    arr = remove(arr, 0);
+    assert(arr.length == 3, err_msg);
+    assert(arr[0] == 3, err_msg);
+
+    arr = remove(arr, 2);
+    assert(arr.length == 2, err_msg);
+    assert(arr[1] == 79, err_msg);
 }
