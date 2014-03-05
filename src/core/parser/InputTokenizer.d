@@ -111,6 +111,17 @@ public class InputTokenizer
 
 
     /**
+     * Reset the state of the tokenizer
+     */
+
+    public void reset ( )
+    {
+        this.number_buf.length = 0;
+        this.str_buf.length = 0;
+    }
+
+
+    /**
      * Checks if a valid number string is present in the number buffer
      * If so, creates a number token and adds it to the given token array
      *

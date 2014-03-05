@@ -25,6 +25,25 @@ private import src.core.util.container.Stack;
 
 
 /**
+ * Parse exception class
+ */
+
+public class ParseException : Exception
+{
+    /**
+     * Constructor
+     *
+     * Params:
+     *      msg = The error message
+     */
+
+    public this ( char[] msg )
+    {
+        super(cast(string)msg);
+    }
+}
+
+/**
  * Parser class
  */
 
@@ -71,6 +90,9 @@ public class Parser
      *
      * Returns:
      *      The generated expression
+     *
+     * Throws:
+     *      ParseException: If unknown or mismatched token is found
      */
 
     public Exp parse ( Token[] tokens )
@@ -85,6 +107,18 @@ public class Parser
         expression = this.buildExpression;
 
         return expression;
+    }
+
+
+    /**
+     * Reset the state of the parser
+     */
+
+    public void reset ( )
+    {
+        this.post_queue.clear;
+        this.op_stack.clear;
+        this.exp_stack.clear;
     }
 
 
@@ -131,6 +165,11 @@ public class Parser
 
                 this.op_stack.push(op_tok);
             }
+            else
+            {
+                auto msg = "Unknown token: " ~ t.str;
+                throw new ParseException(msg);
+            }
         }
 
         while ( this.op_stack.size > 0 )
@@ -170,6 +209,11 @@ public class Parser
         else if ( cast(DivToken)token )
         {
             this.post_queue.enqueue(cast(DivToken)token);
+        }
+        else
+        {
+            auto msg = "Unknown operator: " ~ token.str;
+            throw new ParseException(msg);
         }
     }
 
@@ -237,6 +281,11 @@ public class Parser
         else if ( cast(DivToken)token )
         {
             this.addBinOp!Div;
+        }
+        else
+        {
+            auto msg = "Unknown expression: " ~ token.str;
+            throw new ParseException(msg);
         }
     }
 

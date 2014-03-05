@@ -57,12 +57,22 @@ public class DMath
      *
      * If the tokenizer only returns one token, and it is a string
      * This class will try to handle it as a command
+     *
+     * Params:
+     *      first_run = If this is the first run of the program
+     *
+     * Returns:
+     *      True if the program should keep running, false otherwise
      */
-    public void run ( )
+
+    public bool run ( bool first_run )
     {
         char[] input_buf;
 
-        writefln("Welcome to DMath.\nEnter expressions, or type 'quit' to quit.");
+        if ( first_run )
+        {
+            writefln("Welcome to DMath.\nEnter expressions, or type 'quit' to quit.");
+        }
 
         while(strip(input_buf) != "quit")
         {
@@ -73,12 +83,25 @@ public class DMath
 
             if ( tokens.length == 1 && tokens[0].str == "quit" )
             {
-                return;
+                return false;
             }
 
             Exp exp = this.parser.parse(tokens);
 
             writefln("%s", exp.eval);
         }
+
+        return true;
+    }
+
+
+    /**
+     * Resets the state of this program
+     */
+
+    public void reset ( )
+    {
+        this.tokenizer.reset;
+        this.parser.reset;
     }
 }
