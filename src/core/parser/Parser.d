@@ -129,28 +129,44 @@ public class Parser
      * Params:
      *      tokens = The tokens to parse
      *
-     * Returns:
-     *      The generated expression
-     *
      * Throws:
      *      ParseException: If unknown or mismatched token is found
      */
 
-    private Exp parseTokens ( Token[] tokens )
+    private void parseTokens ( Token[] tokens )
     {
-        Exp result;
-
         foreach ( t; tokens )
         {
             if ( cast(NumToken)t )
             {
                 this.post_queue.enqueue(cast(NumToken)t);
             }
+            else if ( cast(LParenToken)t )
+            {
+                this.op_stack.push(cast(LParenToken)t);
+            }
+            else if ( cast(RParenToken)t )
+            {
+                while ( this.op_stack.top && !cast(LParenToken)this.op_stack.top )
+                {
+                    this.queueOperator(this.op_stack.pop);
+                }
+
+                if ( cast(LParenToken)this.op_stack.top )
+                {
+                    this.op_stack.pop;
+                }
+                else
+                {
+                    char[] msg = cast(char[])"Mismatched parentheses";
+                    throw new ParseException(msg);
+                }
+            }
             else if ( cast(OpToken)t )
             {
                 auto op_tok = cast(OpToken)t;
 
-                while ( this.op_stack.size > 0 )
+                while ( this.op_stack.size > 0 && !cast(ParenToken)this.op_stack.top )
                 {
                     if ( ( op_tok.left_assoc && op_tok.precedence == this.op_stack.top.precedence ) ||
                          ( op_tok.precedence < this.op_stack.top.precedence ) )
@@ -167,7 +183,7 @@ public class Parser
             }
             else
             {
-                auto msg = "Unknown token: " ~ t.str;
+                char[] msg = "Unknown token: " ~ t.str;
                 throw new ParseException(msg);
             }
         }
@@ -176,8 +192,6 @@ public class Parser
         {
             this.queueOperator(this.op_stack.pop);
         }
-
-        return result;
     }
 
 
@@ -248,6 +262,11 @@ public class Parser
         if ( this.exp_stack.size == 1)
         {
             result = this.exp_stack.pop;
+        }
+        else
+        {
+            char[] msg = cast(char[])"Mismatched tokens in expression";
+            throw new ParseException(msg);
         }
 
         return result;

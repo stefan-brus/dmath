@@ -70,7 +70,7 @@ public class InputTokenizer
      * Returns:
      *      The array of tokens found in the string
      */
-    private import std.stdio;
+
     public Token[] parse ( char[] str )
     {
         this.token_buf.length = 0;
@@ -90,6 +90,16 @@ public class InputTokenizer
             else if ( isValidChar(c) )
             {
                 this.str_buf ~= c;
+            }
+            else if ( isParenthesis!LParenToken([c]) )
+            {
+                this.addBufferedTokens;
+                this.token_buf ~= createParenthesis!LParenToken([c]);
+            }
+            else if ( isParenthesis!RParenToken([c]) )
+            {
+                this.addBufferedTokens;
+                this.token_buf ~= createParenthesis!RParenToken([c]);
             }
             else
             {

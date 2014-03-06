@@ -152,6 +152,60 @@ public class OpToken : Token
 
 
 /**
+ * Parenthesis token base class
+ */
+
+public class ParenToken : OpToken
+{
+    /**
+     * Constructor
+     *
+     * Params:
+     *      str = The token string
+     */
+
+    public this ( char[] str )
+    {
+        super(str, 0, true);
+    }
+}
+
+
+/**
+ * Left parenthesis token class
+ */
+
+public class LParenToken : ParenToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"(");
+    }
+}
+
+
+/**
+ * Right parenthesis token class
+ */
+
+public class RParenToken : ParenToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])")");
+    }
+}
+
+
+/**
  * Plus token class
  */
 
@@ -276,6 +330,50 @@ public StrToken createString ( char[] str )
 {
     return new StrToken(str);
 }
+
+
+/**
+ * Checks if a given string is a parenthesis
+ *
+ * Template Params:
+ *      T = The parenthesis token type
+ *
+ * Params:
+ *      str = The string to check
+ */
+
+public bool isParenthesis ( T : ParenToken ) ( char[] str )
+{
+    static if ( is(T == LParenToken) )
+    {
+        return str == "(";
+    }
+    else if ( is(T == RParenToken) )
+    {
+        return str == ")";
+    }
+    else
+    {
+        return false;
+    }
+}
+
+
+/**
+ * Creates a parenthesis token from the givne string
+ *
+ * Template Params:
+ *      T = The parenthesis token type
+ *
+ * Params:
+ *      str = The parenthesis string
+ */
+
+public T createParenthesis ( T : ParenToken ) ( char[] str )
+{
+    return new T;
+}
+
 
 /**
  * Checks if a given string is an operator
