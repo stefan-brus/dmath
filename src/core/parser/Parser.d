@@ -15,8 +15,6 @@ module src.core.parser.Parser;
  * Imports
  */
 
-private import src.core.absyn.Expression;
-
 private import src.core.parser.Tokens;
 
 private import src.core.util.container.Queue;
@@ -64,13 +62,6 @@ public class Parser
 
 
     /**
-     * Expression stack
-     */
-
-    private Stack!Exp exp_stack;
-
-
-    /**
      * Constructor
      */
 
@@ -78,35 +69,29 @@ public class Parser
     {
         this.post_queue = new Queue!Token;
         this.op_stack = new Stack!OpToken;
-        this.exp_stack = new Stack!Exp;
     }
 
 
     /**
-     * Parse an array of tokens and generate an expression tree
+     * Parse an array of tokens and create a queue of tokens in postfix notation
      *
      * Params:
      *      tokens = The token array
      *
      * Returns:
-     *      The generated expression
+     *      The postfix queue
      *
      * Throws:
      *      ParseException: If unknown or mismatched token is found
      */
 
-    public Exp parse ( Token[] tokens )
+    public Queue!Token parse ( Token[] tokens )
     {
-        Exp expression;
-
         this.post_queue.clear;
         this.op_stack.clear;
-        this.exp_stack.clear;
         this.parseTokens(tokens);
 
-        expression = this.buildExpression;
-
-        return expression;
+        return this.post_queue;
     }
 
 
@@ -118,7 +103,6 @@ public class Parser
     {
         this.post_queue.clear;
         this.op_stack.clear;
-        this.exp_stack.clear;
     }
 
 
@@ -233,116 +217,5 @@ public class Parser
             auto msg = "Unknown operator: " ~ token.str;
             throw new ParseException(msg);
         }
-    }
-
-
-    /**
-     * Build an expression tree
-     * Uses the tokens stored in reverse polish notation in the postfix queue
-     * Unknown or mismatched tokens throw exceptions
-     *
-     * Returns:
-     *      The generated expression
-     *
-     * Throws:
-     *      ParseException: If mismatched or unknown token is found
-     */
-
-    private Exp buildExpression ( )
-    {
-        Exp result;
-
-        while ( this.post_queue.size > 0 )
-        {
-            auto token = this.post_queue.dequeue;
-
-            this.addExp(token);
-        }
-
-        if ( this.exp_stack.size == 1)
-        {
-            result = this.exp_stack.pop;
-        }
-        else
-        {
-            char[] msg = cast(char[])"Mismatched tokens in expression";
-            throw new ParseException(msg);
-        }
-
-        return result;
-    }
-
-
-    /**
-     * Adds an expression to the stack based on the given token
-     *
-     * Params:
-     *      token = The token
-     *
-     * Throws:
-     *      ParseException: If unknown token is given
-     */
-
-    private void addExp ( Token token )
-    {
-        if ( cast(NumToken)token )
-        {
-            this.addNum(cast(NumToken)token);
-        }
-        else if ( cast(PlusToken)token )
-        {
-            this.addBinOp!Add;
-        }
-        else if ( cast(MinusToken)token )
-        {
-            this.addBinOp!Sub;
-        }
-        else if ( cast(MultiToken)token )
-        {
-            this.addBinOp!Multi;
-        }
-        else if ( cast(DivToken)token )
-        {
-            this.addBinOp!Div;
-        }
-        else if ( cast(ExpToken)token )
-        {
-            this.addBinOp!Pow;
-        }
-        else
-        {
-            auto msg = "Unknown expression: " ~ token.str;
-            throw new ParseException(msg);
-        }
-    }
-
-
-    /**
-     * Adds a number expression to the stack based on the given token
-     *
-     * Params:
-     *      token = The token to get the value from
-     */
-
-    private void addNum ( NumToken token )
-    {
-        auto exp = new Num(token.value);
-        this.exp_stack.push(exp);
-    }
-
-
-    /**
-     * Adds a binary operation expression of the given type to the stack
-     *
-     * Template Params:
-     *      T = The expression type to add to the stack
-     */
-
-    private void addBinOp ( T : BinOp ) ( )
-    {
-        auto exp = new T;
-        exp.right = this.exp_stack.pop;
-        exp.left = this.exp_stack.pop;
-        this.exp_stack.push(exp);
     }
 }

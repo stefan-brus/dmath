@@ -9,7 +9,7 @@ module src.mod.DMath;
  * Imports
  */
 
-private import src.core.absyn.Expression;
+private import src.core.absyn.ExpressionBuilder;
 
 private import src.core.parser.InputTokenizer;
 
@@ -42,6 +42,13 @@ public class DMath
 
 
     /**
+     * Expression builder
+     */
+
+    private ExpressionBuilder exp_builder;
+
+
+    /**
      * Constructor
      */
 
@@ -49,6 +56,7 @@ public class DMath
     {
         this.tokenizer = new InputTokenizer;
         this.parser = new Parser;
+        this.exp_builder = new ExpressionBuilder;
     }
 
 
@@ -86,7 +94,9 @@ public class DMath
                 return false;
             }
 
-            Exp exp = this.parser.parse(tokens);
+            auto post_queue = this.parser.parse(tokens);
+
+            auto exp = this.exp_builder.buildExpression(post_queue);
 
             writefln("%s", exp.eval);
         }
