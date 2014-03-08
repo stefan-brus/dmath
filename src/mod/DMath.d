@@ -15,6 +15,8 @@ private import src.core.parser.InputTokenizer;
 
 private import src.core.parser.Parser;
 
+private import src.core.util.app.Application;
+
 private import std.stdio;
 
 private import std.string;
@@ -24,7 +26,7 @@ private import std.string;
  * DMath main logic class
  */
 
-public class DMath 
+public class DMath : Application
 {
 
     /**
@@ -50,10 +52,14 @@ public class DMath
 
     /**
      * Constructor
+     *
+     * Params:
+     *      str_args = The command line arguments
      */
 
-    public this ( )
+    public this ( char[][] str_args )
     {
+        super(str_args);
         this.tokenizer = new InputTokenizer;
         this.parser = new Parser;
         this.exp_builder = new ExpressionBuilder;
@@ -73,7 +79,7 @@ public class DMath
      *      True if the program should keep running, false otherwise
      */
 
-    public bool run ( bool first_run )
+    protected override bool appMain ( bool first_run )
     {
         char[] input_buf;
 
@@ -109,7 +115,7 @@ public class DMath
      * Resets the state of this program
      */
 
-    public void reset ( )
+    protected override void reset ( )
     {
         this.tokenizer.reset;
         this.parser.reset;

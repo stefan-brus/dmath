@@ -21,27 +21,8 @@ private import std.stdio;
  * Exits if the 'run' method returns false
  */
 
-void main ( )
+void main ( char[][] args )
 {
-    auto DMath = new DMath;
-
-    bool running = true;
-    bool first_run = true;
-
-    while ( running )
-    {
-        try
-        {
-            running = DMath.run(first_run);
-        }
-        catch ( Exception e )
-        {
-            writefln("Error: %s", e.msg);
-        }
-        finally
-        {
-            DMath.reset;
-            first_run = false;
-        }
-    }
+    auto DMath = new DMath(args);
+    DMath.run;
 }
