@@ -26,7 +26,7 @@ module src.core.util.container.Queue;
  * Imports
  */
 
-private import std.algorithm;
+private import src.core.util.Array;
 
 
 /**
