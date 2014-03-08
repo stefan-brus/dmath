@@ -106,6 +106,16 @@ public class ExpressionBuilder
 
 
     /**
+     * Reset the expression builder
+     */
+
+    public void reset ( )
+    {
+        this.exp_stack.clear;
+    }
+
+
+    /**
      * Adds an expression to the stack based on the given token
      *
      * Params:

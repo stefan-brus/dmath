@@ -198,5 +198,6 @@ public class DMath : Application
     {
         this.tokenizer.reset;
         this.parser.reset;
+        this.exp_builder.reset;
     }
 }
