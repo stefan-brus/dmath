@@ -30,6 +30,17 @@
                 36,
                 276400384
             ]
+        },
+        {
+            "file": "test/division.dmath",
+            "name": "Division operator",
+            "count": 4,
+            "solutions": [
+                3,
+                2.4,
+                8,
+                1
+            ]
         }
     ]
 }
