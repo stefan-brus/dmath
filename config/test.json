@@ -70,6 +70,17 @@
                 35.4504504505,
                 -1.33044008465
             ]
+        },
+        {
+            "file": "test/decimal.dmath",
+            "name": "Decimal numbers",
+            "count": 4,
+            "solutions": [
+                7.008,
+                -43.555,
+                -0.0484848,
+                0.125
+            ]
         }
     ]
 }
