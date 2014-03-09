@@ -65,6 +65,13 @@ public class Test : Application
 
 
         /**
+         * The description of the test
+         */
+
+        char[] description;
+
+
+        /**
          * The number of tests i the fle
          */
 
@@ -210,6 +217,7 @@ public class Test : Application
             TestData test;
             test.file = cast(char[])obj["file"].str;
             test.name = cast(char[])obj["name"].str;
+            test.description = cast(char[])obj["description"].str;
             test.count = cast(uint)obj["count"].integer;
 
             foreach ( val; obj["solutions"].array )
@@ -277,7 +285,7 @@ public class Test : Application
         foreach ( test; this.tests )
         {
             writefln("================================");
-            writefln("Test: %s\n", test.name);
+            writefln("Test: %s\n\n%s\n", test.name, test.description);
             if ( test.err_msg.length > 0 )
             {
                 writefln("Error: %s", test.err_msg);

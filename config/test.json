@@ -3,6 +3,7 @@
         {
             "file": "test/plus.dmath",
             "name": "Plus operator",
+            "description": "Addition operator tests",
             "count": 3,
             "solutions": [
                 4,
@@ -13,6 +14,7 @@
         {
             "file": "test/minus.dmath",
             "name": "Minus operator",
+            "description": "Subtraction operator tests",
             "count": 4,
             "solutions": [
                 3,
@@ -24,6 +26,7 @@
         {
             "file": "test/multiplication.dmath",
             "name": "Multiplication operator",
+            "description": "Multiplication operator tests",
             "count": 3,
             "solutions": [
                 36,
@@ -34,6 +37,7 @@
         {
             "file": "test/division.dmath",
             "name": "Division operator",
+            "description": "Division operator tests",
             "count": 4,
             "solutions": [
                 3,
@@ -45,6 +49,7 @@
         {
             "file": "test/exponent.dmath",
             "name": "Exponent operator",
+            "description": "Exponent operator tests",
             "count": 7,
             "solutions": [
                 1,
@@ -59,6 +64,7 @@
         {
             "file": "test/mixed.dmath",
             "name": "Mixed expressions",
+            "description": "Tests for expressions with mixed operators",
             "count": 8,
             "solutions": [
                 2,
@@ -74,6 +80,7 @@
         {
             "file": "test/decimal.dmath",
             "name": "Decimal numbers",
+            "description": "Tests for expressions with decimal numbers",
             "count": 4,
             "solutions": [
                 7.008,
