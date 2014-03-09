@@ -134,6 +134,18 @@ public class DMath : Application
 
 
     /**
+     * Reset the state of this app
+     */
+
+    public void resetState ( )
+    {
+        this.tokenizer.reset;
+        this.parser.reset;
+        this.exp_builder.reset;
+    }
+
+
+    /**
      * Main program logic function
      *
      * If the tokenizer only returns one token, and it is a string
@@ -196,8 +208,6 @@ public class DMath : Application
 
     protected override void reset ( )
     {
-        this.tokenizer.reset;
-        this.parser.reset;
-        this.exp_builder.reset;
+        this.resetState;
     }
 }

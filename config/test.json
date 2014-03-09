@@ -1,0 +1,25 @@
+{
+    "tests": [
+        {
+            "file": "test/plus.dmath",
+            "name": "Plus operator",
+            "count": 3,
+            "solutions": [
+                4,
+                32,
+                27
+            ]
+        },
+        {
+            "file": "test/minus.dmath",
+            "name": "Minus operator",
+            "count": 4,
+            "solutions": [
+                3,
+                -3,
+                1,
+                -13
+            ]
+        }
+    ]
+}

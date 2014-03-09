@@ -11,14 +11,9 @@ module src.main.dmath;
 
 private import src.mod.DMath;
 
-private import std.stdio;
-
 
 /**
  * Main program function
- *
- * Handles exceptions by displaying the error message and re-running DMath
- * Exits if the 'run' method returns false
  */
 
 void main ( char[][] args )
