@@ -88,6 +88,20 @@
                 -0.0484848,
                 0.125
             ]
+        },
+        {
+            "file": "test/negative.dmath",
+            "name": "Negative numbers",
+            "description": "Tests for expressions with negative numbers",
+            "count": 6,
+            "solutions": [
+                2,
+                0,
+                -62,
+                -25.5833,
+                21.4593,
+                13.824
+            ]
         }
     ]
 }
