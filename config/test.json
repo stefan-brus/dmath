@@ -20,6 +20,16 @@
                 1,
                 -13
             ]
+        },
+        {
+            "file": "test/multiplication.dmath",
+            "name": "Multiplication operator",
+            "count": 3,
+            "solutions": [
+                36,
+                36,
+                276400384
+            ]
         }
     ]
 }
