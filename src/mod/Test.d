@@ -261,7 +261,6 @@ public class Test : Application
             foreach ( i, exp; results )
             {
                 test.values ~= exp.eval;
-                writefln("%s", exp.eval);
 
                 if ( approxEqual(exp.eval, test.solutions[i]) )
                 {
