@@ -102,6 +102,19 @@
                 21.4593,
                 13.824
             ]
+        },
+        {
+            "file": "test/parentheses.dmath",
+            "name": "Parentheses",
+            "description": "Tests for expressions with parentheses",
+            "count": 5,
+            "solutions": [
+                6,
+                30,
+                -243.974,
+                8,
+                5
+            ]
         }
     ]
 }
