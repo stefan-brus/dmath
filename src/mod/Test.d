@@ -286,11 +286,11 @@ public class Test : Application
                 {
                     if ( result == result.Succeeded )
                     {
-                        writefln("Test number %s succeeded", i);
+                        writefln("Test number %s succeeded", i + 1);
                     }
                     else if ( result == result.Failed )
                     {
-                        writefln("Test number %s failed, expected value: %s, received value: %s", i, test.solutions[i], test.values[i]);
+                        writefln("Test number %s failed, expected value: %s, received value: %s", i + 1, test.solutions[i], test.values[i]);
                     }
                     else
                     {
