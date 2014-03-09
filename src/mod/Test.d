@@ -179,11 +179,7 @@ public class Test : Application
             writefln("Error: %s", e.msg);
             return false;
         }
-        /*auto exps = this.dmath.parseFile(cast(char[])"test/minus.dmath");
-        foreach ( exp; exps )
-        {
-            writefln("%s", exp.eval);
-        }*/
+
         return false;
     }
 
