@@ -3,6 +3,7 @@
  *
  * Runs tests on the .dmath files located in the test folder
  * Follows the configuration in config/test.json
+ * Uses std.math.approxEqual to compare numbers, because of floating point fuckery
  */
 
 module src.mod.Test;
@@ -17,6 +18,8 @@ private import src.core.util.app.Application;
 private import src.core.util.File;
 
 private import src.mod.DMath;
+
+private import std.math;
 
 private import std.stdio;
 
@@ -213,7 +216,7 @@ public class Test : Application
             {
                 if ( val.type == val.type.FLOAT )
                 {
-                    test.solutions ~= val.floating;
+                    test.solutions ~= cast(double)val.floating;
                 }
                 else
                 {
@@ -250,8 +253,9 @@ public class Test : Application
             foreach ( i, exp; results )
             {
                 test.values ~= exp.eval;
+                writefln("%s", exp.eval);
 
-                if ( exp.eval == test.solutions[i] )
+                if ( approxEqual(exp.eval, test.solutions[i]) )
                 {
                     test.results ~= TestResult.Succeeded;
                 }
