@@ -129,6 +129,15 @@ public class Test : Application
 
 
     /**
+     * Test result summary data, tests run and tests failed
+     */
+
+    private uint tests_run;
+
+    private uint tests_failed;
+
+
+    /**
      * Constructor
      *
      * Params:
@@ -260,6 +269,8 @@ public class Test : Application
 
             foreach ( i, exp; results )
             {
+                this.tests_run++;
+
                 test.values ~= exp.eval;
 
                 if ( approxEqual(exp.eval, test.solutions[i]) )
@@ -268,6 +279,8 @@ public class Test : Application
                 }
                 else
                 {
+                    this.tests_failed++;
+
                     test.results ~= TestResult.Failed;
                 }
             }
@@ -312,5 +325,9 @@ public class Test : Application
 
             writefln("================================\n");
         }
+
+        writefln("Summary:\n");
+        writefln("Tests run: %s", this.tests_run);
+        writefln("Out of which failed: %s", this.tests_failed);
     }
 }
