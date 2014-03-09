@@ -173,7 +173,7 @@ public class InputTokenizer
     private bool isNegativeNum ( uint i, char c )
     {
         if ( (c == '-' && i < this.stripped_str.length - 1 && isNumeric([ this.stripped_str[i + 1] ])) &&
-             (i == 0 || isOperator([ this.stripped_str[i - 1] ])) )
+             (i == 0 || isOperator([ this.stripped_str[i - 1] ]) || isParenthesis!LParenToken([ this.stripped_str[i - 1] ])) )
         {
             return true;
         }
