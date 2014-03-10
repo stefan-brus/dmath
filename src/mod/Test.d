@@ -17,7 +17,7 @@ private import src.core.util.app.Application;
 
 private import src.core.util.File;
 
-private import src.mod.DMath;
+private import src.mod.common.FileParser;
 
 private import std.math;
 
@@ -108,10 +108,10 @@ public class Test : Application
 
 
     /**
-     * DMath instance
+     * File parser
      */
 
-    private DMath dmath;
+    private FileParser file_parser;
 
 
     /**
@@ -148,7 +148,7 @@ public class Test : Application
     {
         super(str_args);
 
-        this.dmath = new DMath([]);
+        this.file_parser = new FileParser;
     }
 
 
@@ -190,7 +190,10 @@ public class Test : Application
 
     protected override void reset ( )
     {
-        this.dmath.resetState;
+        this.file_parser.reset;
+        this.tests.length = 0;
+        this.tests_run = 0;
+        this.tests_failed = 0;
     }
 
 
@@ -255,7 +258,7 @@ public class Test : Application
     {
         foreach ( ref test; this.tests )
         {
-            auto results = this.dmath.parseFile(test.file);
+            auto results = this.file_parser.parseFile(test.file);
 
             if ( results.length != test.solutions.length )
             {

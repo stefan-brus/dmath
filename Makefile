@@ -1,5 +1,5 @@
 # Common for all targets
-COMMON_SRC = src/mod/DMath.d \
+COMMON_SRC = src/mod/common/FileParser.d src/mod/common/StringEvaluator.d \
     src/core/parser/InputTokenizer.d src/core/parser/Tokens.d src/core/parser/Parser.d \
     src/core/absyn/Expression.d src/core/absyn/ExpressionBuilder.d \
     src/core/util/Array.d src/core/util/File.d src/core/util/String.d \
@@ -8,7 +8,7 @@ COMMON_SRC = src/mod/DMath.d \
 
 
 # Main target
-MAIN_TARGET = src/main/dmath.d $(COMMON_SRC)
+MAIN_TARGET = src/main/dmath.d src/mod/DMath.d $(COMMON_SRC)
 
 
 # Test target

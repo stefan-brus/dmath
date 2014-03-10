@@ -9,21 +9,13 @@ module src.mod.DMath;
  * Imports
  */
 
-private import src.core.absyn.Expression;
-
-private import src.core.absyn.ExpressionBuilder;
-
-private import src.core.parser.InputTokenizer;
-
-private import src.core.parser.Parser;
-
 private import src.core.util.app.Application;
 
-private import src.core.util.File;
+private import src.mod.common.FileParser;
+
+private import src.mod.common.StringEvaluator;
 
 private import std.stdio;
-
-private import std.string;
 
 
 /**
@@ -32,33 +24,18 @@ private import std.string;
 
 public class DMath : Application
 {
-
     /**
-     * Input tokenizer
+     * File parser
      */
 
-    private InputTokenizer tokenizer;
-
-
-    /**
-     * Parser
-     */
-
-    private Parser parser;
+    private FileParser file_parser;
 
 
     /**
-     * Expression builder
+     * String evaluator
      */
 
-    private ExpressionBuilder exp_builder;
-
-
-    /**
-     * Set this flag to true if the app should quit
-     */
-
-    private bool quit;
+    private StringEvaluator evaluator;
 
 
     /**
@@ -71,77 +48,8 @@ public class DMath : Application
     public this ( char[][] str_args )
     {
         super(str_args);
-        this.tokenizer = new InputTokenizer;
-        this.parser = new Parser;
-        this.exp_builder = new ExpressionBuilder;
-    }
-
-
-    /**
-     * Parse the given file
-     * Treats each line as a dmath expression, evaluates it and returns the resulting expressions
-     *
-     * Params:
-     *      file = The name of the file to parse
-     *
-     * Returns:
-     *      The generated list of expressions
-     */
-
-    public Exp[] parseFile ( char[] file )
-    {
-        Exp[] result;
-        auto lines = readLines(file);
-
-        foreach ( str; lines )
-        {
-            result ~= this.eval(str);
-        }
-
-        return result;
-    }
-
-
-    /**
-     * Evaluate a dmath expression string
-     *
-     * Params:
-     *      str = The expression string
-     *
-     * Returns:
-     *      The expression
-     */
-
-    public Exp eval ( char[] str )
-    {
-        auto tokens = tokenizer.parse(strip(str));
-
-        if ( tokens.length == 1 && tokens[0].str == "quit" )
-        {
-            this.quit = true;
-            return new Num(0);
-        }
-        else
-        {
-
-            auto post_queue = this.parser.parse(tokens);
-
-            auto exp = this.exp_builder.buildExpression(post_queue);
-
-            return exp;
-        }
-    }
-
-
-    /**
-     * Reset the state of this app
-     */
-
-    public void resetState ( )
-    {
-        this.tokenizer.reset;
-        this.parser.reset;
-        this.exp_builder.reset;
+        this.file_parser = new FileParser;
+        this.evaluator = new StringEvaluator;
     }
 
 
@@ -162,7 +70,7 @@ public class DMath : Application
     {
         if ( this.args.has(cast(char[])"-f") )
         {
-            auto expressions = this.parseFile(this.args.get(cast(char[])"-f"));
+            auto expressions = this.file_parser.parseFile(this.args.get(cast(char[])"-f"));
 
             foreach ( exp; expressions )
             {
@@ -174,21 +82,21 @@ public class DMath : Application
 
         char[] input_buf;
 
-        this.quit = false;
+        bool quit = false;
 
         if ( first_run )
         {
             writefln("Welcome to DMath.\nEnter expressions, or type 'quit' to quit.");
         }
 
-        while ( !this.quit )
+        while ( !quit )
         {
             writef("> ");
             stdin.readln(input_buf);
 
-            auto exp = this.eval(input_buf);
+            auto exp = this.evaluator.eval(input_buf, quit);
 
-            if ( this.quit )
+            if ( quit )
             {
                 return false;
             }
@@ -208,6 +116,7 @@ public class DMath : Application
 
     protected override void reset ( )
     {
-        this.resetState;
+        this.file_parser.reset;
+        this.evaluator.reset;
     }
 }
