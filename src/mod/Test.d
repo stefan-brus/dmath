@@ -17,7 +17,7 @@ private import src.core.util.app.Application;
 
 private import src.core.util.File;
 
-private import src.mod.common.FileParser;
+private import src.core.util.dmath.FileParser;
 
 private import std.math;
 

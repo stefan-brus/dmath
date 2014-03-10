@@ -1,10 +1,10 @@
 # Common for all targets
-COMMON_SRC = src/mod/common/FileParser.d src/mod/common/StringEvaluator.d \
-    src/core/parser/InputTokenizer.d src/core/parser/Tokens.d src/core/parser/Parser.d \
+COMMON_SRC = src/core/parser/InputTokenizer.d src/core/parser/Tokens.d src/core/parser/Parser.d \
     src/core/absyn/Expression.d src/core/absyn/ExpressionBuilder.d \
-	src/core/symtab/SymbolTable.d \
-    src/core/util/Array.d src/core/util/File.d src/core/util/String.d \
+	src/core/symtab/Symbols.d src/core/symtab/SymbolTable.d \
+    src/core/util/Array.d src/core/util/File.d src/core/util/JSON.d src/core/util/String.d \
     src/core/util/app/Application.d src/core/util/app/Arguments.d \
+    src/core/util/dmath/FileParser.d src/core/util/dmath/StringEvaluator.d \
     src/core/util/container/Stack.d src/core/util/container/Queue.d src/core/util/container/HashMap.d
 
 

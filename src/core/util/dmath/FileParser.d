@@ -9,7 +9,7 @@
  * Exp[] expressions = file_parser.parse(cast(char[])"math.dmath");
  */
 
-module src.mod.common.FileParser;
+module src.core.util.dmath.FileParser;
 
 
 /**
@@ -18,9 +18,9 @@ module src.mod.common.FileParser;
 
 private import src.core.absyn.Expression;
 
-private import src.core.util.File;
+private import src.core.util.dmath.StringEvaluator;
 
-private import src.mod.common.StringEvaluator;
+private import src.core.util.File;
 
 
 /**

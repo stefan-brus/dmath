@@ -9,7 +9,7 @@
  * evaluator.eval(cast(char[])str); // 6
  */
 
- module src.mod.common.StringEvaluator;
+ module src.core.util.dmath.StringEvaluator;
 
 
  /**

@@ -11,9 +11,9 @@ module src.mod.DMath;
 
 private import src.core.util.app.Application;
 
-private import src.mod.common.FileParser;
+private import src.core.util.dmath.FileParser;
 
-private import src.mod.common.StringEvaluator;
+private import src.core.util.dmath.StringEvaluator;
 
 private import std.stdio;
 
