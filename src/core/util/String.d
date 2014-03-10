@@ -24,7 +24,7 @@ private import std.ascii;
 
 public bool isValidChar ( char c )
 {
-    return isAlpha(c);
+    return isAlpha(c) || c == '_';
 }
 
 
@@ -96,6 +96,7 @@ unittest
 
     assert(isValidChar('a'), err_msg);
     assert(isValidChar('Q'), err_msg);
+    assert(isValidChar('_'), err_msg);
     assert(!isValidChar('2'), err_msg);
     assert(!isValidChar('+'), err_msg);
 
