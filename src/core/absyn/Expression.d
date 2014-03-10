@@ -9,7 +9,11 @@ module src.core.absyn.Expression;
  * Imports
  */
 
+private import src.core.symtab.SymbolTable;
+
 private import std.conv;
+
+private import std.string;
 
 
 /**
@@ -32,6 +36,16 @@ public abstract class Exp
      */
 
     public abstract double eval ( );
+
+
+    /**
+     * Abstract function to get the string of this expression
+     *
+     * Returns:
+     *      The string of this expression's value, and its children's string representations
+     */
+
+    public abstract char[] str ( );
 }
 
 /**
@@ -69,6 +83,77 @@ public class Num : Exp
     {
         return this.val;
     }
+
+
+    /**
+     * Get the string representation of this expression
+     */
+
+    public override char[] str ( )
+    {
+        return cast(char[])format("%s", this.eval);
+    }
+}
+
+
+/**
+ * Variable expression class
+ */
+
+public class Var : Exp
+{
+    /**
+     * The variable name
+     */
+
+    private char[] name;
+
+
+    /**
+     * Symbol table reference
+     */
+
+    private SymbolTable symtab;
+
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      name = The variable name
+     *      symtab = The symbol table reference
+     */
+
+    public this ( char[] name )
+    {
+        this.name = name;
+        this.symtab = SymbolTable.instance;
+    }
+
+
+    /**
+     * Evaluate this expression
+     *
+     * Returns the value of the expression in the symbol table for this variable
+     *
+     * Returns:
+     *      The value of the variable
+     */
+
+    public override double eval ( )
+    {
+        return this.symtab[name].eval;
+    }
+
+
+    /**
+     * Get the string representation of this expression
+     */
+
+    public override char[] str ( )
+    {
+        return this.name;
+    }
 }
 
 
@@ -94,15 +179,24 @@ public abstract class BinOp : Exp
 
 
     /**
+     * The string representation of this operator
+     */
+
+    private char[] op_str;
+
+
+    /**
      * Constructor
      *
      * Params:
      *      eval_dg = Child expression evaluator delegate
+     *      op_str = The string representation of this operator
      */
 
-    public this ( BinOpDg eval_dg )
+    public this ( BinOpDg eval_dg, char[] op_str )
     {
         this.eval_dg = eval_dg;
+        this.op_str = op_str;
     }
 
 
@@ -114,6 +208,16 @@ public abstract class BinOp : Exp
     public override double eval ( )
     {
         return this.eval_dg(this.left, this.right);
+    }
+
+
+    /**
+     * Get the string representation of this expression
+     */
+
+    public override char[] str ( )
+    {
+        return format("(%s %s %s)", this.left.str, this.op_str, this.right.str);
     }
 }
 
@@ -135,7 +239,7 @@ public class Add : BinOp
             return left.eval + right.eval;
         }
 
-        super(&plus);
+        super(&plus, cast(char[])"+");
     }
 }
 
@@ -157,7 +261,7 @@ public class Sub : BinOp
             return left.eval - right.eval;
         }
 
-        super(&minus);
+        super(&minus, cast(char[])"-");
     }
 }
 
@@ -179,7 +283,7 @@ public class Multi : BinOp
             return left.eval * right.eval;
         }
 
-        super(&multiply);
+        super(&multiply, cast(char[])"*");
     }
 }
 
@@ -206,7 +310,7 @@ public class Div : BinOp
             return left.eval / right.eval;
         }
 
-        super(&divide);
+        super(&divide, cast(char[])"/");
     }
 }
 
@@ -236,7 +340,7 @@ public class Pow : BinOp
             return this.power(left.eval, to!uint(right.eval));
         }
 
-        super(&power);
+        super(&power, cast(char[])"^");
     }
 
 
@@ -263,5 +367,45 @@ public class Pow : BinOp
         }
 
         return result;;
+    }
+}
+
+
+/**
+ * Assignment expression class
+ *
+ * Asserts that the left expression is a variable on evaluation
+ */
+
+public class Assign : BinOp
+{
+    /**
+     * Symbol table reference
+     */
+
+    private SymbolTable symtab;
+
+
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        this.symtab = SymbolTable.instance;
+
+        double assign(Exp var, Exp val)
+        in
+        {
+            assert(cast(Var)var, "Left hand of assignment must be a variable");
+        }
+        body
+        {
+            this.symtab[var.str] = val;
+
+            return val.eval;
+        }
+
+        super(&assign, cast(char[])"=");
     }
 }

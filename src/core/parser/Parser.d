@@ -125,6 +125,10 @@ public class Parser
             {
                 this.post_queue.enqueue(cast(NumToken)t);
             }
+            else if ( cast(StrToken)t )
+            {
+                this.post_queue.enqueue(cast(StrToken)t);
+            }
             else if ( cast(LParenToken)t )
             {
                 this.op_stack.push(cast(LParenToken)t);
@@ -211,6 +215,10 @@ public class Parser
         else if ( cast(ExpToken)token )
         {
             this.post_queue.enqueue(cast(ExpToken)token);
+        }
+        else if ( cast(AssignToken)token )
+        {
+            this.post_queue.enqueue(cast(AssignToken)token);
         }
         else
         {

@@ -115,6 +115,25 @@
                 8,
                 5
             ]
+        },
+        {
+            "file": "test/variables.dmath",
+            "name": "Variables",
+            "description": "Tests for variable assignment and expressions with variables",
+            "count": 11,
+            "solutions": [
+                3,
+                3,
+                4,
+                4,
+                73,
+                73,
+                89,
+                89,
+                89,
+                89,
+                267
+            ]
         }
     ]
 }

@@ -290,6 +290,23 @@ public class ExpToken : OpToken
 
 
 /**
+ * Assignment token class
+ */
+
+public class AssignToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])"=", 0, false);
+    }
+}
+
+
+/**
  * Creates a number token from the given string
  *
  * Params:
@@ -399,6 +416,8 @@ public bool isOperator ( char[] str )
             return true;
         case "^":
             return true;
+        case "=":
+            return true;
         default:
             return false;
     }
@@ -440,6 +459,9 @@ body
             break;
         case "^":
             result = new ExpToken;
+            break;
+        case "=":
+            result = new AssignToken;
             break;
         default:
             assert(false, "Unknown operator");

@@ -131,6 +131,10 @@ public class ExpressionBuilder
         {
             this.addNum(cast(NumToken)token);
         }
+        else if ( cast(StrToken)token )
+        {
+            this.addVar(cast(StrToken)token);
+        }
         else if ( cast(PlusToken)token )
         {
             this.addBinOp!Add;
@@ -150,6 +154,10 @@ public class ExpressionBuilder
         else if ( cast(ExpToken)token )
         {
             this.addBinOp!Pow;
+        }
+        else if ( cast(AssignToken)token )
+        {
+            this.addBinOp!Assign;
         }
         else
         {
@@ -174,16 +182,40 @@ public class ExpressionBuilder
 
 
     /**
+     * Adds a variable expression to the stack based on the given token
+     *
+     * Params:
+     *      token = The token to get the variable name from
+     */
+
+    private void addVar ( StrToken token )
+    {
+        auto exp = new Var(token.str);
+        this.exp_stack.push(exp);
+    }
+
+
+    /**
      * Adds a binary operation expression of the given type to the stack
      *
      * Template Params:
      *      T = The expression type to add to the stack
+     *
+     * Throws:
+     *      ExpException if trying to add an assignment to a non-variable expression
      */
 
     private void addBinOp ( T : BinOp ) ( )
     {
         auto exp = new T;
         exp.right = this.exp_stack.pop;
+        static if ( is(T == Assign) )
+        {
+            if ( !cast(Var)this.exp_stack.top )
+            {
+                throw new ExpException(cast(char[])"Assignment must be to variable");
+            }
+        }
         exp.left = this.exp_stack.pop;
         this.exp_stack.push(exp);
     }
