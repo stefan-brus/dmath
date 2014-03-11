@@ -1,5 +1,5 @@
 /**
- * This module takes a string of user input, and returns an array of tokens.
+ * This module takes a string of user input, and returns an array of parser tokens.
  * The tokens are returned in the order they were parsed, no syntax error checking is done here.
  *
  * Example usage:
@@ -8,7 +8,7 @@
  * Token[] tokens = tokenizer.parse(str);
  */
 
-module src.core.parser.InputTokenizer;
+module src.core.lexer.InputTokenizer;
 
 
 /**

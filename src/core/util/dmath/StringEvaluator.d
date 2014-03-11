@@ -20,7 +20,7 @@ private import src.core.absyn.Expression;
 
 private import src.core.absyn.ExpressionBuilder;
 
-private import src.core.parser.InputTokenizer;
+private import src.core.lexer.InputTokenizer;
 
 private import src.core.parser.Parser;
 
