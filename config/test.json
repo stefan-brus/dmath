@@ -134,6 +134,18 @@
                 89,
                 267
             ]
+        },
+        {
+            "file": "test/constants.dmath",
+            "name": "Constants",
+            "description": "Tests for expressions with mathematical constants",
+            "count": 4,
+            "solutions": [
+                3.14159,
+                2.71828,
+                5.85987,
+                2.31145
+            ]
         }
     ]
 }

@@ -9,6 +9,8 @@ module src.mod.DMath;
  * Imports
  */
 
+private import src.core.symtab.Constants;
+
 private import src.core.util.app.Application;
 
 private import src.core.util.dmath.FileParser;
@@ -56,6 +58,7 @@ public class DMath : Application
     /**
      * Main program logic function
      *
+     * Initializes constants
      * If the tokenizer only returns one token, and it is a string
      * This class will try to handle it as a command
      *
@@ -68,6 +71,8 @@ public class DMath : Application
 
     protected override bool appMain ( bool first_run )
     {
+        Constants.instance.init;
+
         if ( this.args.has(cast(char[])"-f") )
         {
             auto expressions = this.file_parser.parseFile(this.args.get(cast(char[])"-f"));

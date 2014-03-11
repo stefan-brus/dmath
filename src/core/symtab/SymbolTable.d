@@ -20,6 +20,8 @@ module src.core.symtab.SymbolTable;
 
 private import src.core.absyn.Expression;
 
+private import src.core.symtab.Symbols;
+
 private import src.core.util.container.HashMap;
 
 
@@ -59,10 +61,10 @@ public class SymbolTable
 
 
     /**
-     * Internal variable name => expression map
+     * Internal variable name => symbol map
      */
 
-    private HashMap!(char[], Exp) var_map;
+    private HashMap!(char[], Symbol) sym_map;
 
 
     /**
@@ -73,7 +75,7 @@ public class SymbolTable
 
     private this ( )
     {
-        this.var_map = new HashMap!(char[], Exp);
+        this.sym_map = new HashMap!(char[], Symbol);
     }
 
 
@@ -96,6 +98,22 @@ public class SymbolTable
 
 
     /**
+     * Put a constant into the symbol table
+     *
+     * Constants cannot be overwritten by the user
+     *
+     * Params:
+     *      name = The name of the constant
+     *      value = The value of the constant
+     */
+
+    public void putConstant ( char[] name, double value )
+    {
+        this.sym_map[name] = new Constant(new Num(value));
+    }
+
+
+    /**
      * Index assignment operator
      *
      * Params:
@@ -105,7 +123,20 @@ public class SymbolTable
 
     public void opIndexAssign ( Exp exp, char[] var )
     {
-        this.var_map[var] = exp;
+        if ( var in this.sym_map && cast(Constant)this.sym_map[var] )
+        {
+            char[] msg = "Cannot overwrite constant " ~ var;
+            throw new SymtabException(msg);
+        }
+
+        if ( var in this.sym_map )
+        {
+            this.sym_map[var].exp = exp;
+        }
+        else
+        {
+            this.sym_map[var] = new Variable(exp);
+        }
     }
 
 
@@ -124,13 +155,13 @@ public class SymbolTable
 
     public Exp opIndex ( char[] var )
     {
-        if ( !(var in this.var_map) )
+        if ( !(var in this.sym_map) )
         {
             char[] msg = "Variable " ~ var ~ " not defined";
             throw new SymtabException(msg);
         }
 
-        return this.var_map[var];
+        return this.sym_map[var].exp;
     }
 
 
@@ -146,7 +177,7 @@ public class SymbolTable
 
     public bool opIn_r ( char[] var )
     {
-        return var in this.var_map;
+        return var in this.sym_map;
     }
 
 
@@ -156,6 +187,6 @@ public class SymbolTable
 
     public void reset ( )
     {
-        this.var_map.clear;
+        this.sym_map.clear;
     }
 }

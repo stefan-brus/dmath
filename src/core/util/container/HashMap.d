@@ -237,6 +237,41 @@ public class HashMap ( K, V )
 
 
     /**
+     * Foreach operator
+     * Enables foreach iteration over key-value pairs
+     * Goes through the internal entry array and skips null entries
+     *
+     * Params:
+     *      dg = The opApply delegate
+     *
+     * Returns:
+     *      Who knows
+     */
+
+    public int opApply ( int delegate ( ref K key, ref V val ) dg )
+    {
+        int result = 0;
+
+        foreach ( entry; this.entries )
+        {
+            if ( !entry )
+            {
+                continue;
+            }
+
+            result = dg(entry.key, entry.val);
+
+            if ( result > 0 )
+            {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
      * Remove an entry from the map
      *
      * Params:
@@ -423,6 +458,28 @@ unittest
 
     map["two"] = 2;
     map["three"] = 3;
+
+    assert(map.size == 3, err_msg);
+    assert("two" in map, err_msg);
+    assert("three" in map, err_msg);
+
+    foreach ( k, v; map )
+    {
+        assert(v > 0 && v < 4, err_msg);
+        if ( v == 1 )
+        {
+            assert(k == "one", err_msg);
+        }
+        else if ( v == 2 )
+        {
+            assert(k == "two", err_msg);
+        }
+        else if ( v == 3 )
+        {
+            assert(k == "three", err_msg);
+        }
+    }
+
     map["four"] = 4;
     map["five"] = 5;
     map["six"] = 6;

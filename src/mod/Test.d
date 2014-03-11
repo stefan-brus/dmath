@@ -13,6 +13,8 @@ module src.mod.Test;
  * Imports
  */
 
+private import src.core.symtab.Constants;
+
 private import src.core.util.app.Application;
 
 private import src.core.util.File;
@@ -155,6 +157,7 @@ public class Test : Application
     /**
      * Main application logic method
      *
+     * Initializes constants
      * Has its own exception handling to avoid infinite loops
      *
      * Params:
@@ -166,6 +169,8 @@ public class Test : Application
 
     protected override bool appMain ( bool first_run )
     {
+        Constants.instance.init;
+
         try
         {
             writefln("Running DMath test suite\n");
