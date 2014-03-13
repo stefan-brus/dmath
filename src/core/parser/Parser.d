@@ -1,11 +1,11 @@
 /**
- * Builds an expression tree from an array of tokens using the Shunting-Yard algorithm:
+ * Builds a queue of tokens in reverse polish notation according to the following:
  * http://en.wikipedia.org/wiki/Shunting-yard_algorithm
  *
  * Example usage:
  *
  * Parser parser = new Parser;
- * Exp exp = parser.parse(tokens); // tokens is an array of Token[] from InputTokenizer
+ * auto postfix_queue = parser.parse(tokens); // tokens is an array of Token[] from InputTokenizer
  */
 
 module src.core.parser.Parser;
@@ -62,6 +62,13 @@ public class Parser
 
 
     /**
+     * Whether or not the currently parsed string is an assignment expression
+     */
+
+    private bool is_assignment;
+
+
+    /**
      * Constructor
      */
 
@@ -77,6 +84,7 @@ public class Parser
      *
      * Params:
      *      tokens = The token array
+     *      is_assignment = Whether or not this expression is an assignment
      *
      * Returns:
      *      The postfix queue
@@ -85,11 +93,13 @@ public class Parser
      *      ParseException: If unknown or mismatched token is found
      */
 
-    public Queue!Token parse ( Token[] tokens )
+    public Queue!Token parse ( Token[] tokens, out bool is_assignment )
     {
         this.post_queue.clear;
         this.op_stack.clear;
         this.parseTokens(tokens);
+
+        is_assignment = this.is_assignment;
 
         return this.post_queue;
     }
@@ -103,11 +113,15 @@ public class Parser
     {
         this.post_queue.clear;
         this.op_stack.clear;
+        this.is_assignment = false;
     }
 
 
     /**
      * Parse tokens according to the Shunting-Yard algorithm
+     *
+     * Counts and sets a function token's argument count
+     *
      * Unknown or mismatched tokens throw exceptions
      *
      * Params:
@@ -119,6 +133,9 @@ public class Parser
 
     private void parseTokens ( Token[] tokens )
     {
+        uint args = 0;
+        this.is_assignment = false;
+
         foreach ( t; tokens )
         {
             if ( cast(NumToken)t )
@@ -143,12 +160,46 @@ public class Parser
                 if ( cast(LParenToken)this.op_stack.top )
                 {
                     this.op_stack.pop;
+
+                    if ( cast(FnToken)this.op_stack.top )
+                    {
+                        (cast(FnToken)this.op_stack.top).args = args;
+                        this.queueOperator(this.op_stack.pop);
+                        args = 0;
+                    }
                 }
                 else
                 {
                     char[] msg = cast(char[])"Mismatched parentheses";
                     throw new ParseException(msg);
                 }
+            }
+            else if ( cast(FnToken)t )
+            {
+                this.op_stack.push(cast(FnToken)t);
+                args = 1;
+            }
+            else if ( cast(SepToken)t )
+            {
+                bool found_paren = cast(LParenToken)this.op_stack.top !is null;
+
+                while ( !found_paren )
+                {
+                    this.queueOperator(this.op_stack.pop);
+
+                    if ( cast(LParenToken)this.op_stack.top )
+                    {
+                        found_paren = true;
+                    }
+                }
+
+                if ( !found_paren )
+                {
+                    char[] msg = cast(char[])"Mismatched parentheses";
+                    throw new ParseException(msg);
+                }
+
+                args++;
             }
             else if ( cast(OpToken)t )
             {
@@ -184,11 +235,14 @@ public class Parser
 
 
     /**
-     * Checks the type of the operator and adds the appropriate token to the queue
+     * Checks the type of the token and adds the appropriate token to the queue
+     *
+     * Handles operator tokens and function tokens
+     *
      * Unknown tokens throw exceptions
      *
      * Params:
-     *      token = The operator token
+     *      token = The token
      *
      * Throws:
      *      ParseException: If unknown token is foun
@@ -196,7 +250,11 @@ public class Parser
 
     private void queueOperator ( OpToken token )
     {
-        if ( cast(PlusToken)token )
+        if ( cast(FnToken)token )
+        {
+            this.post_queue.enqueue(cast(FnToken)token);
+        }
+        else if ( cast(PlusToken)token )
         {
             this.post_queue.enqueue(cast(PlusToken)token);
         }
@@ -218,6 +276,7 @@ public class Parser
         }
         else if ( cast(AssignToken)token )
         {
+            this.is_assignment = true;
             this.post_queue.enqueue(cast(AssignToken)token);
         }
         else

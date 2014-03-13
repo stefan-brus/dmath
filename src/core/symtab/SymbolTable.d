@@ -114,6 +114,29 @@ public class SymbolTable
 
 
     /**
+     * Puts a function into the symbol table
+     *
+     * Params:
+     *      name = The name of the function
+     *      exp = The function expression
+     *      args = The argument list
+     */
+
+    public void putFunction ( char[] name, Exp exp, char[][] args )
+    {
+        if ( name in this.sym_map && cast(Function)this.sym_map[name] )
+        {
+            this.sym_map[name].exp = exp;
+            (cast(Function)this.sym_map[name]).args = args;
+        }
+        else
+        {
+            this.sym_map[name] = new Function(exp, args);
+        }
+    }
+
+
+    /**
      * Index assignment operator
      *
      * Params:
@@ -147,21 +170,21 @@ public class SymbolTable
      *      var = The variable name string
      *
      * Returns:
-     *      The value of the given variable
+     *      The symbol for the given variable
      *
      * Throws:
      *      SymtabException if the variable is not defined
      */
 
-    public Exp opIndex ( char[] var )
+    public Symbol opIndex ( char[] var )
     {
         if ( !(var in this.sym_map) )
         {
-            char[] msg = "Variable " ~ var ~ " not defined";
+            char[] msg = "Symbol " ~ var ~ " not defined";
             throw new SymtabException(msg);
         }
 
-        return this.sym_map[var].exp;
+        return this.sym_map[var];
     }
 
 

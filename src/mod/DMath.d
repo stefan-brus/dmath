@@ -96,6 +96,8 @@ public class DMath : Application
 
         while ( !quit )
         {
+            this.evaluator.reset;
+
             writef("> ");
             stdin.readln(input_buf);
 

@@ -23,26 +23,6 @@ private import src.core.util.container.Stack;
 
 
 /**
- * Expression building exception class
- */
-
-public class ExpException : Exception
-{
-    /**
-     * Constructor
-     *
-     * Params:
-     *      msg = The error message
-     */
-
-    public this ( char[] msg )
-    {
-        super(cast(string)msg);
-    }
-}
-
-
-/**
  * Expression builder class
  */
 
@@ -53,6 +33,13 @@ public class ExpressionBuilder
      */
 
     private Stack!Exp exp_stack;
+
+
+    /**
+     * Whether or not this expression is an assignment
+     */
+
+    private bool is_assignment;
 
 
     /**
@@ -72,6 +59,7 @@ public class ExpressionBuilder
      *
      * Params:
      *      post_queue = The postfix token queue
+     *      is_assignment = Whether or not this expression is an assignment
      *
      * Returns:
      *      The generated expression
@@ -80,8 +68,10 @@ public class ExpressionBuilder
      *      ParseException: If mismatched or unknown token is found
      */
 
-    public Exp buildExpression ( Queue!Token post_queue )
+    public Exp buildExpression ( Queue!Token post_queue, bool is_assignment )
     {
+        this.is_assignment = is_assignment;
+
         Exp result;
 
         while ( post_queue.size > 0 )
@@ -112,6 +102,7 @@ public class ExpressionBuilder
     public void reset ( )
     {
         this.exp_stack.clear;
+        this.is_assignment = false;
     }
 
 
@@ -134,6 +125,10 @@ public class ExpressionBuilder
         else if ( cast(StrToken)token )
         {
             this.addVar(cast(StrToken)token);
+        }
+        else if ( cast(FnToken)token )
+        {
+            this.addFn(cast(FnToken)token);
         }
         else if ( cast(PlusToken)token )
         {
@@ -196,6 +191,43 @@ public class ExpressionBuilder
 
 
     /**
+     * Adds a function expression to the stack based on the given token
+     * If is_assignment is true, adds an FnDef, otherwise an FnCall
+     *
+     * Params:
+     *      token = The token to get function data from
+     */
+
+    private void addFn ( FnToken token )
+    {
+        Exp[] args;
+
+        for ( uint i = 0; i < token.args; i++ )
+        {
+            args ~= this.exp_stack.pop;
+        }
+
+        if ( this.is_assignment )
+        {
+            char[][] str_args;
+
+            foreach ( arg; args )
+            {
+                str_args ~= arg.str;
+            }
+
+            auto exp = new FnDef(token.str, str_args);
+            this.exp_stack.push(exp);
+        }
+        else
+        {
+            auto exp = new FnCall(token.str, args);
+            this.exp_stack.push(exp);
+        }
+    }
+
+
+    /**
      * Adds a binary operation expression of the given type to the stack
      *
      * Template Params:
@@ -211,9 +243,9 @@ public class ExpressionBuilder
         exp.right = this.exp_stack.pop;
         static if ( is(T == Assign) )
         {
-            if ( !cast(Var)this.exp_stack.top )
+            if ( !cast(Var)this.exp_stack.top && !cast(FnDef)this.exp_stack.top )
             {
-                throw new ExpException(cast(char[])"Assignment must be to variable");
+                throw new ExpException(cast(char[])"Assignment must be to variable or function definition");
             }
         }
         exp.left = this.exp_stack.pop;

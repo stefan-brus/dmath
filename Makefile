@@ -1,5 +1,6 @@
 # Common for all targets
 COMMON_SRC = src/core/absyn/Expression.d src/core/absyn/ExpressionBuilder.d \
+	src/core/absyn/util/Function.d src/core/absyn/util/ExpTree.d \
 	src/core/lexer/InputTokenizer.d \
 	src/core/parser/Tokens.d src/core/parser/Parser.d \
 	src/core/symtab/Constants.d src/core/symtab/Symbols.d src/core/symtab/SymbolTable.d \

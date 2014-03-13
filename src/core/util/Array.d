@@ -61,6 +61,78 @@ body
 
 
 /**
+ * Checks if the given array contains the given element
+ *
+ * Template Params:
+ *      T = The type of elements stored in the array
+ *
+ * Params:
+ *      arr = The array
+ *      elm = The element
+ *
+ * Returns:
+ *      True if the array contains the element, false otherwise
+ */
+
+public bool contains ( T ) ( T[] arr, T elm )
+in
+{
+    assert(arr.length, "Empty array");
+}
+body
+{
+    foreach ( val; arr )
+    {
+        if ( val == elm )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+/**
+ * Gets the index of the first instance of the given element in the given array
+ *
+ * The array must contain the element
+ *
+ * Template Params:
+ *      T = The type of elements stored in the array
+ *
+ * Params:
+ *      arr = The array
+ *      elm = The element
+ *
+ * Returns:
+ *      The index of the first occurence of elm
+ */
+
+public size_t indexOf ( T ) ( T[] arr, T elm )
+in
+{
+    assert(arr.length, "Empty array");
+    assert(contains(arr, elm), "Element not in array");
+}
+body
+{
+    size_t result;
+
+    foreach ( i, val; arr )
+    {
+        if ( val == elm )
+        {
+            result = i;
+            break;
+        }
+    }
+
+    return result;
+}
+
+
+/**
  * Unittests
  */
 
@@ -90,4 +162,23 @@ unittest
     arr = remove(arr, 2);
     assert(arr.length == 2, err_msg);
     assert(arr[1] == 79, err_msg);
+
+
+    /**
+     * contains
+     */
+
+    assert(contains(arr, 3), err_msg);
+    assert(contains(arr, 79), err_msg);
+    assert(!contains(arr, 42), err_msg);
+
+
+    /**
+     * indexOf
+     */
+
+    arr ~= 3;
+    assert(arr.length == 3, err_msg);
+    assert(indexOf(arr, 79) == 1, err_msg);
+    assert(indexOf(arr, 3) == 0, err_msg);
 }

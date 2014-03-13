@@ -93,13 +93,18 @@ public class InputTokenizer
             }
             else if ( isParenthesis!LParenToken([c]) )
             {
-                this.addBufferedTokens;
+                this.addBufferedTokens(true);
                 this.token_buf ~= createParenthesis!LParenToken([c]);
             }
             else if ( isParenthesis!RParenToken([c]) )
             {
                 this.addBufferedTokens;
                 this.token_buf ~= createParenthesis!RParenToken([c]);
+            }
+            else if ( isSeparator([c]) )
+            {
+                this.addBufferedTokens;
+                this.token_buf ~= createSeparator;
             }
             else
             {
@@ -137,9 +142,14 @@ public class InputTokenizer
 
     /**
      * Adds tokens from the number and string buffers
+     *
+     * If lparen is true, contents of the string buffer will be added as a function token
+     *
+     * Params:
+     *      lparen = Whether or not a left parenthesis has been found
      */
 
-    private void addBufferedTokens ( )
+    private void addBufferedTokens ( bool lparen = false )
     {
         if ( this.number_buf.length > 0 )
         {
@@ -149,7 +159,15 @@ public class InputTokenizer
 
         if ( this.str_buf.length > 0 )
         {
-            this.token_buf ~= this.addStrToken;
+            if ( lparen )
+            {
+                this.token_buf ~= this.addFnToken;
+            }
+            else
+            {
+                this.token_buf ~= this.addStrToken;
+            }
+
             this.str_buf.length = 0;
         }
     }
@@ -208,5 +226,18 @@ public class InputTokenizer
     private StrToken addStrToken ( )
     {
         return createString(this.str_buf);
+    }
+
+
+    /**
+     * Creates a new function token from the string buffer
+     *
+     * Returns:
+     *      The created function token
+     */
+
+    private FnToken addFnToken ( )
+    {
+        return createFunction(this.str_buf);
     }
 }

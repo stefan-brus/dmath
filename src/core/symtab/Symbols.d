@@ -79,3 +79,32 @@ public class Constant : Symbol
         super(exp);
     }
 }
+
+
+/**
+ * Function symbol
+ */
+
+public class Function : Symbol
+{
+    /**
+     * The list of arguments
+     */
+
+    public char[][] args;
+
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      exp = The expression of the function
+     *      args = The argument list
+     */
+
+    public this ( Exp exp, char[][] args )
+    {
+        super(exp);
+        this.args = args;
+    }
+}

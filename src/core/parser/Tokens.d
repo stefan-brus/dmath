@@ -152,6 +152,50 @@ public class OpToken : Token
 
 
 /**
+ * Function token class
+ */
+
+public class FnToken : OpToken
+{
+    /**
+     * The number of arguments this function has
+     */
+
+    public size_t args;
+
+
+    /**
+     * Constructor
+     *
+     * Params:
+     *      str = The token string
+     */
+
+    public this ( char[] str )
+    {
+        super(str, 10000, true);
+    }
+}
+
+
+/**
+ * List separator token class
+ */
+
+public class SepToken : OpToken
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        super(cast(char[])",", 10000, true);
+    }
+}
+
+
+/**
  * Parenthesis token base class
  */
 
@@ -346,6 +390,51 @@ body
 public StrToken createString ( char[] str )
 {
     return new StrToken(str);
+}
+
+
+/**
+ * Creates a function token from the given string
+ *
+ * Params:
+ *      str = The string
+ *
+ * Returns:
+ *      A function token
+ */
+
+public FnToken createFunction ( char[] str )
+{
+    return new FnToken(str);
+}
+
+
+/**
+ * Checks if a string is a list separator token
+ *
+ * Params:
+ *      str = The string to check
+ *
+ * Returns:
+ *      True if the string is a list separator
+ */
+
+public bool isSeparator ( char[] str )
+{
+    return str == ",";
+}
+
+
+/**
+ * Creates a list separator token
+ *
+ * Returns:
+ *      A separator token
+ */
+
+public SepToken createSeparator ( )
+{
+    return new SepToken;
 }
 
 

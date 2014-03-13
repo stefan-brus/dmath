@@ -146,6 +146,20 @@
                 5.85987,
                 2.31145
             ]
+        },
+        {
+            "file": "test/functions.dmath",
+            "name": "Functions",
+            "description": "Tests for user defined functions, and expressions calling them",
+            "count": 6,
+            "solutions": [
+                0,
+                6,
+                0,
+                31,
+                0,
+                18
+            ]
         }
     ]
 }

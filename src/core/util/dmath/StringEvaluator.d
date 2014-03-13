@@ -90,9 +90,11 @@ public class StringEvaluator
         }
         else
         {
-            auto post_queue = this.parser.parse(tokens);
+            bool is_assignment;
 
-            auto exp = this.exp_builder.buildExpression(post_queue);
+            auto post_queue = this.parser.parse(tokens, is_assignment);
+
+            auto exp = this.exp_builder.buildExpression(post_queue, is_assignment);
 
             return exp;
         }
@@ -111,11 +113,13 @@ public class StringEvaluator
 
     public Exp eval ( char[] str )
     {
+        bool is_assignment;
+
         auto tokens = tokenizer.parse(strip(str));
 
-        auto post_queue = this.parser.parse(tokens);
+        auto post_queue = this.parser.parse(tokens, is_assignment);
 
-        auto exp = this.exp_builder.buildExpression(post_queue);
+        auto exp = this.exp_builder.buildExpression(post_queue, is_assignment);
 
         return exp;
     }
