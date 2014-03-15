@@ -71,7 +71,7 @@ public class DMath : Application
 
     protected override bool appMain ( bool first_run )
     {
-        Constants.instance.init;
+        Constants.instance.initConstants;
 
         if ( this.args.has(cast(char[])"-f") )
         {

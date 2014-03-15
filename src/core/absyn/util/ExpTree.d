@@ -11,6 +11,8 @@ module src.core.absyn.util.ExpTree;
 
 private import src.core.absyn.Expression;
 
+private import src.core.util.tmpl.Singleton;
+
 
 /**
  * Expression tree utility class
@@ -18,7 +20,7 @@ private import src.core.absyn.Expression;
  * Implemented as a singleton
  */
 
-public class ExpUtil
+public class ExpUtil : Singleton!(ExpUtil)
 {
     /**
      * Replace function delegate type
@@ -31,41 +33,6 @@ public class ExpUtil
      */
 
     private alias Exp delegate(Exp) ReplaceDg;
-    /**
-     * Singleton instance
-     */
-
-    private static ExpUtil _instance;
-
-
-    /**
-     * Constructor
-     *
-     * Private - use singleton instance method
-     */
-
-    private this ( )
-    {
-
-    }
-
-
-    /**
-     * Singleton instance method
-     *
-     * Returns:
-     *      The singleton instance
-     */
-
-    public static ExpUtil instance ( )
-    {
-        if ( _instance is null )
-        {
-            _instance = new ExpUtil;
-        }
-
-        return _instance;
-    }
 
 
     /**

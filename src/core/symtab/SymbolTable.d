@@ -24,6 +24,8 @@ private import src.core.symtab.Symbols;
 
 private import src.core.util.container.HashMap;
 
+private import src.core.util.tmpl.Singleton;
+
 
 /**
  * Symbol table exception class
@@ -51,50 +53,13 @@ public class SymtabException : Exception
  * Implemented as a singleton
  */
 
-public class SymbolTable
+public class SymbolTable : Singleton!(SymbolTable)
 {
-    /**
-     * Singleton instance
-     */
-
-    private static SymbolTable _instance;
-
-
     /**
      * Internal variable name => symbol map
      */
 
     private HashMap!(char[], Symbol) sym_map;
-
-
-    /**
-     * Constructor
-     *
-     * Private, use static instance() method to get instance
-     */
-
-    private this ( )
-    {
-        this.sym_map = new HashMap!(char[], Symbol);
-    }
-
-
-    /**
-     * Singleton instance method
-     *
-     * Returns:
-     *      The singleton instance
-     */
-
-    public static SymbolTable instance ( )
-    {
-        if ( _instance is null )
-        {
-            _instance = new SymbolTable;
-        }
-
-        return _instance;
-    }
 
 
     /**
@@ -211,5 +176,15 @@ public class SymbolTable
     public void reset ( )
     {
         this.sym_map.clear;
+    }
+
+
+    /**
+     * Initialize the symbol table
+     */
+
+    protected override void init ( )
+    {
+        this.sym_map = new HashMap!(char[], Symbol);
     }
 }

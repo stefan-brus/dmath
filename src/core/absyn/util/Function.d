@@ -17,6 +17,8 @@ private import src.core.symtab.Symbols;
 
 private import src.core.symtab.SymbolTable;
 
+private import src.core.util.tmpl.Singleton;
+
 private import src.core.util.Array;
 
 private import std.string;
@@ -28,45 +30,8 @@ private import std.string;
  * Implemented as a singleton
  */
 
-public class FnUtil
+public class FnUtil : Singleton!(FnUtil)
 {
-    /**
-     * Singleton instance
-     */
-
-    private static FnUtil _instance;
-
-
-    /**
-     * Constructor
-     *
-     * Private - use singleton instance method
-     */
-
-    private this ( )
-    {
-
-    }
-
-
-    /**
-     * Singleton instance method
-     *
-     * Returns:
-     *      The singleton instance
-     */
-
-    public static FnUtil instance ( )
-    {
-        if ( _instance is null )
-        {
-            _instance = new FnUtil;
-        }
-
-        return _instance;
-    }
-
-
     /**
      * Call a function
      *

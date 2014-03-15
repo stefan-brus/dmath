@@ -19,6 +19,8 @@ private import src.core.symtab.SymbolTable;
 
 private import src.core.util.dmath.StringEvaluator;
 
+private import src.core.util.tmpl.Singleton;
+
 private import src.core.util.File;
 
 private import src.core.util.JSON;
@@ -34,45 +36,8 @@ private import std.stdio;
  * Implemented as a singleton
  */
 
-public class Constants
+public class Constants : Singleton!(Constants)
 {
-    /**
-     * Singleton instance
-     */
-
-    private static Constants _instance;
-
-
-    /**
-     * Constructor
-     *
-     * Private - use singleton instance method
-     */
-
-    private this ( )
-    {
-
-    }
-
-
-    /**
-     * Singleton instance method
-     *
-     * Returns:
-     *      The singleton instance
-     */
-
-    public static Constants instance ( )
-    {
-        if ( _instance is null )
-        {
-            _instance = new Constants;
-        }
-
-        return _instance;
-    }
-
-
     /**
      * Initialize constants
      *
@@ -81,7 +46,7 @@ public class Constants
      * Performs its owne error handling to avoid infinite loops
      */
 
-    public void init ( )
+    public void initConstants ( )
     {
         try
         {

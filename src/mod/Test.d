@@ -169,7 +169,7 @@ public class Test : Application
 
     protected override bool appMain ( bool first_run )
     {
-        Constants.instance.init;
+        Constants.instance.initConstants;
 
         try
         {
