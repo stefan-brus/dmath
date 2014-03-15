@@ -22,6 +22,8 @@ private import src.core.util.dmath.StringEvaluator;
 
 private import src.core.util.File;
 
+private import src.core.util.String;
+
 private import std.string;
 
 
@@ -57,7 +59,10 @@ public class FileParser
 
     /**
      * Parse the given file
+     *
      * Treats each line as a dmath expression, evaluates it and returns the resulting expressions
+     *
+     * Skips empty lines and lines starting with comments
      *
      * Params:
      *      file = The name of the file to parse
@@ -74,6 +79,11 @@ public class FileParser
         foreach ( str; lines )
         {
             if ( strip(str).length == 0 )
+            {
+                continue;
+            }
+
+            if ( isComment(str) )
             {
                 continue;
             }

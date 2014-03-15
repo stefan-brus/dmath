@@ -1,0 +1,7 @@
+# Comments test
+# Comments can be their own line
+3 + 2
+# In between expressions
+2 * 3 # At the end of lines
+3 * 4
+# At the end of files

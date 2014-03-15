@@ -10,6 +10,8 @@ module src.core.util.String;
 
 private import std.ascii;
 
+private import std.string;
+
 
 /**
  * Checks if a given character is valid
@@ -78,6 +80,38 @@ public char[] removeWhitespace ( char[] str )
 
 
 /**
+ * Checks if a given character is a comment, '#'
+ *
+ * Params:
+ *      c = The character to check
+ *
+ * Returns:
+ *      True if the character is a comment, false otherwise
+ */
+
+public bool isComment ( char c )
+{
+    return c == '#';
+}
+
+
+/**
+ * Checks if a given string is a comment, I.E starts with '#'
+ *
+ * Params:
+ *      str = The string to check
+ *
+ * Returns:
+ *      True if the string is a comment, false otherwise
+ */
+
+public bool isComment ( char[] str )
+{
+    return str.length > 0 && isComment(strip(str)[0]);
+}
+
+
+/**
  * Unittests
  */
 
@@ -120,4 +154,12 @@ unittest
     assert(removeWhitespace(cast(char[])"") == "", err_msg);
     assert(removeWhitespace(cast(char[])"abc") == "abc", err_msg);
     assert(removeWhitespace(cast(char[])" he    \t\r\n ll   o ") == "hello", err_msg);
+
+
+    /**
+     * isComment
+     */
+
+    assert(isComment('#'), err_msg);
+    assert(!isComment('a'), err_msg);
 }

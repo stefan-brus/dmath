@@ -170,6 +170,17 @@
                 4,
                 5
             ]
+        },
+        {
+            "file": "test/comments.dmath",
+            "name": "Comments",
+            "description": "Tests for .dmath files with comments",
+            "count": 3,
+            "solutions": [
+                5,
+                6,
+                12
+            ]
         }
     ]
 }

@@ -64,6 +64,8 @@ public class InputTokenizer
      *
      * Strips whitespace from the given string
      *
+     * If a comment ('#') is encountered, the rest of the string is skipped
+     *
      * Params:
      *      str = The string to parse
      *
@@ -79,7 +81,11 @@ public class InputTokenizer
 
         foreach ( i, c; this.stripped_str )
         {
-            if ( isNegativeNum(i, c) )
+            if ( isComment(c) )
+            {
+                break;
+            }
+            else if ( this.isNegativeNum(i, c) )
             {
                 this.number_buf ~= c;
             }
