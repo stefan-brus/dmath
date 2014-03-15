@@ -94,6 +94,36 @@ body
 
 
 /**
+ * Check if the first array contains any elements of the second array
+ *
+ * Template Params:
+ *      T = The type of element contained in the arrays
+ *
+ * Params:
+ *      arr = The array to check
+ *      elms = The elements to look for
+ */
+
+public bool contains ( T ) ( T[] arr, T[] elms )
+in
+{
+    assert(arr.length && elms.length, "Empty array");
+}
+body
+{
+    foreach ( val; elms )
+    {
+        if ( contains(arr, val) )
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+/**
  * Gets the index of the first instance of the given element in the given array
  *
  * The array must contain the element
@@ -171,6 +201,10 @@ unittest
     assert(contains(arr, 3), err_msg);
     assert(contains(arr, 79), err_msg);
     assert(!contains(arr, 42), err_msg);
+
+    assert(contains(arr, [1, 2, 3]), err_msg);
+    assert(contains(arr, [78, 79, 80]), err_msg);
+    assert(!contains(arr, [32, 33, 34]), err_msg);
 
 
     /**

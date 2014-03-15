@@ -13,7 +13,7 @@ module src.mod.Test;
  * Imports
  */
 
-private import src.core.symtab.Constants;
+private import src.core.runtime.Constants;
 
 private import src.core.util.app.Application;
 

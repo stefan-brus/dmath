@@ -9,7 +9,11 @@ module src.mod.DMath;
  * Imports
  */
 
-private import src.core.symtab.Constants;
+private import src.core.absyn.Expression;
+
+private import src.core.runtime.Commands;
+
+private import src.core.runtime.Constants;
 
 private import src.core.util.app.Application;
 
@@ -17,7 +21,11 @@ private import src.core.util.dmath.FileParser;
 
 private import src.core.util.dmath.StringEvaluator;
 
+private import src.core.util.Array;
+
 private import std.stdio;
+
+private import std.string;
 
 
 /**
@@ -59,8 +67,8 @@ public class DMath : Application
      * Main program logic function
      *
      * Initializes constants
-     * If the tokenizer only returns one token, and it is a string
-     * This class will try to handle it as a command
+     * If the tokenizer only contains one word, and it is a command
+     * this class will execute the command
      *
      * Params:
      *      first_run = If this is the first run of the program
@@ -89,6 +97,10 @@ public class DMath : Application
 
         bool quit = false;
 
+        Exp exp;
+
+        Commands.instance.initCommands(quit);
+
         if ( first_run )
         {
             writefln("Welcome to DMath.\nEnter expressions, or type 'quit' to quit.");
@@ -101,7 +113,14 @@ public class DMath : Application
             writef("> ");
             stdin.readln(input_buf);
 
-            auto exp = this.evaluator.eval(input_buf, quit);
+            if ( Commands.instance.isCommand(strip(input_buf)) )
+            {
+                Commands.instance.exec(strip(input_buf));
+            }
+            else
+            {
+                exp = this.evaluator.eval(input_buf);
+            }
 
             if ( quit )
             {

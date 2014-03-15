@@ -5,10 +5,10 @@
  *
  * Usage example:
  * auto consts = new Constants;
- * consts.init;
+ * consts.initConstants;
  */
 
-module src.core.symtab.Constants;
+module src.core.runtime.Constants;
 
 
 /**
