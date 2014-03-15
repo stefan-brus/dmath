@@ -160,6 +160,16 @@
                 0,
                 18
             ]
+        },
+        {
+            "file": "test/empty_lines.dmath",
+            "name": "Empty lines",
+            "description": "Tests for .dmath files with empty lines",
+            "count": 2,
+            "solutions": [
+                4,
+                5
+            ]
         }
     ]
 }

@@ -22,6 +22,8 @@ private import src.core.util.dmath.StringEvaluator;
 
 private import src.core.util.File;
 
+private import std.string;
+
 
 /**
  * File parser class
@@ -71,6 +73,11 @@ public class FileParser
 
         foreach ( str; lines )
         {
+            if ( strip(str).length == 0 )
+            {
+                continue;
+            }
+
             this.exp_buf ~= this.evaluator.eval(str);
         }
 
