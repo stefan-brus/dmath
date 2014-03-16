@@ -254,12 +254,18 @@ public class HashMap ( K, V )
 
         foreach ( entry; this.entries )
         {
-            if ( !entry )
+            if ( entry is null )
             {
                 continue;
             }
 
             result = dg(entry.key, entry.val);
+
+            while ( entry.next !is null )
+            {
+                entry = entry.next;
+                result = dg(entry.key, entry.val);
+            }
 
             if ( result > 0 )
             {
