@@ -84,6 +84,23 @@ public class FnUtil : Singleton!(FnUtil)
 
 
     /**
+     * Put a function in the symbol table
+     *
+     * Params:
+     *      name = The function name
+     *      exp = The function expression
+     *      args = The function arguments
+     */
+
+    public void putFunction ( char[] name, Exp exp, char[][] args )
+    {
+        auto replaced_exp = this.replaceArgRefs(exp, args);
+
+        SymbolTable.instance.putFunction(name, replaced_exp, args);
+    }
+
+
+    /**
      * Replace references to function arguments with argument expressions
      *
      * Params:

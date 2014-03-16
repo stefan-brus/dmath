@@ -728,8 +728,7 @@ public class Assign : BinOp
             if ( cast(FnDef) var )
             {
                 auto args = (cast(FnDef)var).args;
-                auto replaced_exp = FnUtil.instance.replaceArgRefs(val, args);
-                SymbolTable.instance.putFunction((cast(FnDef)var).name, val, args);
+                FnUtil.instance.putFunction((cast(FnDef)var).name, val, args);
 
                 return 0;
             }

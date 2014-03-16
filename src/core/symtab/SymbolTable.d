@@ -170,6 +170,35 @@ public class SymbolTable : Singleton!(SymbolTable)
 
 
     /**
+     * Foreach operator
+     * Iterates over the internal hash map
+     *
+     * Params:
+     *      dg = The opApply delegate
+     *
+     * Returns:
+     *      Magic
+     */
+
+    public int opApply ( int delegate ( ref char[] key, ref Symbol val ) dg )
+    {
+        int result = 0;
+
+        foreach ( name, sym; this.sym_map )
+        {
+            result = dg(name, sym);
+
+            if ( result > 0 )
+            {
+                break;
+            }
+        }
+
+        return result;
+    }
+
+
+    /**
      * Reset the symbol table
      */
 

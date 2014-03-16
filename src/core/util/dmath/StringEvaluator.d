@@ -69,41 +69,6 @@ public class StringEvaluator
     /**
      * Evaluate a dmath expression string
      *
-     * Sets the quit output variable to true if the quit command was input
-     *
-     * Params:
-     *      str = The expression string
-     *      quit = Quit state output variable
-     *
-     * Returns:
-     *      The evaluated expression
-     */
-
-    public Exp eval ( char[] str, out bool quit )
-    {
-        auto tokens = tokenizer.parse(strip(str));
-
-        if ( tokens.length == 1 && tokens[0].str == "quit" )
-        {
-            quit = true;
-            return new Num(0);
-        }
-        else
-        {
-            bool is_assignment;
-
-            auto post_queue = this.parser.parse(tokens, is_assignment);
-
-            auto exp = this.exp_builder.buildExpression(post_queue, is_assignment);
-
-            return exp;
-        }
-    }
-
-
-    /**
-     * Evaluate a dmath expression string
-     *
      * Params:
      *      str = The expression string
      *

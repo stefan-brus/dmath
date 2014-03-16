@@ -99,7 +99,7 @@ public class DMath : Application
 
         Exp exp;
 
-        Commands.instance.initCommands(quit);
+        Commands.instance.initCommands(this.evaluator, quit);
 
         if ( first_run )
         {
@@ -120,15 +120,12 @@ public class DMath : Application
             else
             {
                 exp = this.evaluator.eval(input_buf);
+                writefln("%s", exp.eval);
             }
 
             if ( quit )
             {
                 return false;
-            }
-            else
-            {
-                writefln("%s", exp.eval);
             }
         }
 

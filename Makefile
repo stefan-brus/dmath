@@ -8,7 +8,7 @@ COMMON_SRC = src/core/absyn/Expression.d src/core/absyn/ExpressionBuilder.d \
     src/core/util/Array.d src/core/util/File.d src/core/util/JSON.d src/core/util/String.d \
     src/core/util/app/Application.d src/core/util/app/Arguments.d \
     src/core/util/container/Stack.d src/core/util/container/Queue.d src/core/util/container/HashMap.d \
-    src/core/util/dmath/FileParser.d src/core/util/dmath/StringEvaluator.d \
+    src/core/util/dmath/FileParser.d src/core/util/dmath/StateSaver.d src/core/util/dmath/StringEvaluator.d \
     src/core/util/tmpl/Singleton.d
 
 
