@@ -95,8 +95,7 @@ public class Parser
 
     public Queue!Token parse ( Token[] tokens, out bool is_assignment )
     {
-        this.post_queue.clear;
-        this.op_stack.clear;
+        this.reset;
         this.parseTokens(tokens);
 
         is_assignment = this.is_assignment;
@@ -120,7 +119,8 @@ public class Parser
     /**
      * Parse tokens according to the Shunting-Yard algorithm
      *
-     * Counts and sets a function token's argument count
+     * Counts the number of arguments to a function
+     * Stores these in a stack in case of more function calls
      *
      * Unknown or mismatched tokens throw exceptions
      *
@@ -133,7 +133,8 @@ public class Parser
 
     private void parseTokens ( Token[] tokens )
     {
-        uint args = 0;
+        auto arg_counts = new Stack!uint;
+
         this.is_assignment = false;
 
         foreach ( t; tokens )
@@ -163,9 +164,9 @@ public class Parser
 
                     if ( cast(FnToken)this.op_stack.top )
                     {
-                        (cast(FnToken)this.op_stack.top).args = args;
+                        (cast(FnToken)this.op_stack.top).args = arg_counts.top;
                         this.queueOperator(this.op_stack.pop);
-                        args = 0;
+                        arg_counts.pop;
                     }
                 }
                 else
@@ -177,7 +178,7 @@ public class Parser
             else if ( cast(FnToken)t )
             {
                 this.op_stack.push(cast(FnToken)t);
-                args = 1;
+                arg_counts.push(1);
             }
             else if ( cast(SepToken)t )
             {
@@ -199,7 +200,7 @@ public class Parser
                     throw new ParseException(msg);
                 }
 
-                args++;
+                arg_counts.push(arg_counts.pop + 1);
             }
             else if ( cast(OpToken)t )
             {
