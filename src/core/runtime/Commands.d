@@ -29,13 +29,6 @@ private import src.core.util.tmpl.Singleton;
 public class Commands : Singleton!(Commands)
 {
     /**
-     * The file to save and load the state to/from
-     */
-
-    private static const char[] STATE_FILE = "state.json";
-
-
-    /**
      * Command execution delegate aliass
      */
 
@@ -61,14 +54,15 @@ public class Commands : Singleton!(Commands)
      *
      * Params:
      *      evaluator = The string evaluator to pass to the saver
+     *      saver = The state saver
      *      quit = The quit state of the running program, to be written by the quit command
      */
 
-    public void initCommands ( StringEvaluator evaluator, out bool quit )
+    public void initCommands ( StringEvaluator evaluator, StateSaver saver, out bool quit )
     {
         this.comm_map = new HashMap!(char[], CommandDg);
 
-        this.saver = new StateSaver(evaluator, cast(char[])STATE_FILE);
+        this.saver = saver;
 
         void commQuit ( )
         {

@@ -147,7 +147,8 @@ public class StateSaver
     {
         if ( !exists(this.file) )
         {
-            return;
+            char[] msg = cast(char[])"Can't find file: " ~ this.file;
+            throw new SaveException(msg);
         }
 
         try

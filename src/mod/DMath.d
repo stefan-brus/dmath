@@ -19,6 +19,8 @@ private import src.core.util.app.Application;
 
 private import src.core.util.dmath.FileParser;
 
+private import src.core.util.dmath.StateSaver;
+
 private import src.core.util.dmath.StringEvaluator;
 
 private import src.core.util.Array;
@@ -35,6 +37,13 @@ private import std.string;
 public class DMath : Application
 {
     /**
+     * The file to save and load the state to/from
+     */
+
+    private static const char[] STATE_FILE = "state.json";
+
+
+    /**
      * File parser
      */
 
@@ -46,6 +55,13 @@ public class DMath : Application
      */
 
     private StringEvaluator evaluator;
+
+
+    /**
+     * State saver
+     */
+
+    private StateSaver saver;
 
 
     /**
@@ -64,9 +80,61 @@ public class DMath : Application
 
 
     /**
+     * Process the command line arguments
+     *
+     * Arguments:
+     *      -s = Load the state from a file
+     *      -f = Read expressions from a file
+     *
+     * Returns:
+     *      True if the program should keep running, false otherwise
+     */
+
+    protected override bool processArgs ( )
+    {
+        // Load the state from a file
+        if ( this.args.has(cast(char[])"-s") )
+        {
+            auto file_name = this.args.get(cast(char[])"-s");
+
+            this.saver = new StateSaver(this.evaluator, file_name);
+
+            try
+            {
+                this.saver.load;
+            }
+            catch ( Exception e )
+            {
+                writefln("Unable to read file: %s, reason: %s", file_name, e.msg);
+            }
+        }
+        else
+        {
+            this.saver = new StateSaver(this.evaluator, cast(char[])STATE_FILE);
+        }
+
+        // Evaluate expressions in a given file
+        if ( this.args.has(cast(char[])"-f") )
+        {
+            auto expressions = this.file_parser.parseFile(this.args.get(cast(char[])"-f"));
+
+            foreach ( exp; expressions )
+            {
+                writefln("%s", exp.eval);
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /**
      * Main program logic function
      *
      * Initializes constants
+     * Handles command line arguments
      * If the tokenizer only contains one word, and it is a command
      * this class will execute the command
      *
@@ -81,15 +149,8 @@ public class DMath : Application
     {
         Constants.instance.initConstants;
 
-        if ( this.args.has(cast(char[])"-f") )
+        if ( !this.processArgs )
         {
-            auto expressions = this.file_parser.parseFile(this.args.get(cast(char[])"-f"));
-
-            foreach ( exp; expressions )
-            {
-                writefln("%s", exp.eval);
-            }
-
             return false;
         }
 
@@ -99,7 +160,7 @@ public class DMath : Application
 
         Exp exp;
 
-        Commands.instance.initCommands(this.evaluator, quit);
+        Commands.instance.initCommands(this.evaluator, this.saver, quit);
 
         if ( first_run )
         {

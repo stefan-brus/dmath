@@ -73,6 +73,16 @@ public abstract class Application
 
 
     /**
+     * Process the command line arguments, override this
+     *
+     * Returns:
+     *      True if the program should keep running, false otherwise
+     */
+
+    protected abstract bool processArgs ( );
+
+
+    /**
      * Main application logic method, override this
      *
      * Params:
