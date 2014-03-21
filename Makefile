@@ -22,7 +22,7 @@ TEST_TARGET = src/main/test.d src/mod/Test.d $(COMMON_SRC)
 
 # dmd flags
 DCC = dmd
-DFLAGS = -debug -gc -unittest
+DFLAGS = -debug -g -unittest
 
 
 # Targets
