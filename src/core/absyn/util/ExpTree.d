@@ -59,8 +59,15 @@ public class ExpUtil : Singleton!(ExpUtil)
         Exp new_right = this.replace(exp.right, dg);
         Exp new_exp = dg(exp);
 
-        new_exp.left = new_left;
-        new_exp.right = new_right;
+        if ( new_left )
+        {
+            new_exp.left = new_left;
+        }
+
+        if ( new_right )
+        {
+            new_exp.right = new_right;
+        }
 
         return new_exp;
     }

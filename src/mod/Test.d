@@ -155,6 +155,19 @@ public class Test : Application
 
 
     /**
+     * Process the command line arguments
+     *
+     * Returns:
+     *      True if the program should keep running, false otherwise
+     */
+
+    protected override bool processArgs ( )
+    {
+        return true;
+    }
+
+
+    /**
      * Main application logic method
      *
      * Initializes constants
