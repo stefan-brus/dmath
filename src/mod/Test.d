@@ -17,9 +17,11 @@ private import src.core.runtime.Constants;
 
 private import src.core.util.app.Application;
 
-private import src.core.util.File;
+private import src.core.util.container.HashMap;
 
 private import src.core.util.dmath.FileParser;
+
+private import src.core.util.File;
 
 private import std.math;
 
@@ -328,6 +330,11 @@ public class Test : Application
 
     private void printReport ( )
     {
+        uint fatal_err_count;
+        uint parse_err_count;
+
+        auto fail_map = new HashMap!(char[], uint[]);
+
         foreach ( test; this.tests )
         {
             writefln("================================");
@@ -335,12 +342,16 @@ public class Test : Application
 
             if ( test.fatal.length > 0 )
             {
+                fatal_err_count++;
+
                 writefln("Fatal error: %s\n", test.fatal);
 
                 foreach ( i, err; test.parse_errs )
                 {
                     if ( err.length > 0 )
                     {
+                        parse_err_count++;
+
                         writefln("Test number %s, parse error: %s", i + 1, err);
                     }
                 }
@@ -357,6 +368,13 @@ public class Test : Application
                     }
                     else if ( result == result.Failed )
                     {
+                        if ( !(test.name in fail_map) )
+                        {
+                            fail_map[test.name] = [];
+                        }
+
+                        fail_map[test.name] = fail_map[test.name] ~ (i + 1);
+
                         writefln("Test number %s failed, expected value: %s, received value: %s", i + 1, test.solutions[i], test.values[i]);
                     }
                     else
@@ -372,5 +390,21 @@ public class Test : Application
         writefln("Summary:\n");
         writefln("Tests run: %s", this.tests_run);
         writefln("Out of which failed: %s", this.tests_failed);
+        writefln("Fatal errors: %s", fatal_err_count);
+        writefln("Parse errors: %s", parse_err_count);
+        writefln("");
+
+        if ( fail_map.size > 0 )
+        {
+            writefln("Failed tests:");
+
+            foreach ( name, fails; fail_map )
+            {
+                foreach ( fail; fails )
+                {
+                    writefln("Test '%s' number %s failed", name, fail);
+                }
+            }
+        }
     }
 }
