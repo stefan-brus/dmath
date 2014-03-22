@@ -102,10 +102,17 @@ public class Test : Application
 
 
          /**
-          * If an error occured during the test, this buffer contains the error message
+          * If a fatal error occured during the test, this buffer contains the error message
           */
 
-        char[] err_msg;
+        char[] fatal;
+
+
+        /**
+         * Error messages caught during the parsing of the test file are stored here
+         */
+
+        char[][] parse_errs;
     }
 
 
@@ -258,6 +265,8 @@ public class Test : Application
                 }
             }
 
+            test.parse_errs.length = test.solutions.length;
+
             this.tests ~= test;
         }
     }
@@ -276,11 +285,19 @@ public class Test : Application
     {
         foreach ( ref test; this.tests )
         {
-            auto results = this.file_parser.parseFile(test.file);
+            void errorHandler ( size_t test_idx, char[] msg )
+            {
+                if ( test_idx < test.parse_errs.length )
+                {
+                    test.parse_errs[test_idx] = msg;
+                }
+            }
+
+            auto results = this.file_parser.parseFile(test.file, &errorHandler);
 
             if ( results.length != test.solutions.length )
             {
-                test.err_msg = cast(char[])"Invalid number of test results";
+                test.fatal = cast(char[])"Invalid number of test results";
                 continue;
             }
 
@@ -315,9 +332,18 @@ public class Test : Application
         {
             writefln("================================");
             writefln("Test: %s\n\n%s\n", test.name, test.description);
-            if ( test.err_msg.length > 0 )
+
+            if ( test.fatal.length > 0 )
             {
-                writefln("Error: %s", test.err_msg);
+                writefln("Fatal error: %s\n", test.fatal);
+
+                foreach ( i, err; test.parse_errs )
+                {
+                    if ( err.length > 0 )
+                    {
+                        writefln("Test number %s, parse error: %s", i + 1, err);
+                    }
+                }
             }
             else
             {

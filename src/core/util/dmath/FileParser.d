@@ -34,6 +34,13 @@ private import std.string;
 public class FileParser
 {
     /**
+     * Parse error handler delegate alias
+     */
+
+    private alias void delegate ( size_t idx, char[] msg ) ErrorDg;
+
+
+    /**
      * Buffer for generated expressions
      */
 
@@ -66,15 +73,19 @@ public class FileParser
      *
      * Params:
      *      file = The name of the file to parse
+     *      err_dg = Optional error handler delegate
      *
      * Returns:
      *      The generated list of expressions
      */
 
-    public Exp[] parseFile ( char[] file )
+    public Exp[] parseFile ( char[] file, ErrorDg dg = null )
     {
         this.exp_buf.length = 0;
+
         auto lines = readLines(file);
+
+        uint exp_no = 0;
 
         foreach ( str; lines )
         {
@@ -88,7 +99,23 @@ public class FileParser
                 continue;
             }
 
-            this.exp_buf ~= this.evaluator.eval(str);
+            try
+            {
+                this.exp_buf ~= this.evaluator.eval(str);
+            }
+            catch ( Exception e )
+            {
+                if ( dg !is null )
+                {
+                    dg(exp_no, cast(char[])e.msg);
+                }
+                else
+                {
+                    throw e;
+                }
+            }
+
+            exp_no++;
         }
 
         return this.exp_buf;
