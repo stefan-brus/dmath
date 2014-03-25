@@ -6,7 +6,7 @@
  * Usage example:
  * auto evaluator = new StringEvaluator;
  * auto str = "2 + 4";
- * evaluator.eval(cast(char[])str); // 6
+ * evaluator.eval(str); // 6
  */
 
  module src.core.util.dmath.StringEvaluator;
@@ -76,7 +76,7 @@ public class StringEvaluator
      *      The evaluated expression
      */
 
-    public Exp eval ( char[] str )
+    public Exp eval ( string str )
     {
         bool is_assignment;
 

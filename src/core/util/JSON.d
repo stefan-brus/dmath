@@ -29,24 +29,24 @@ private import std.string;
  *      The generated HashMap
  */
 
-public HashMap!(char[], T) jsonToMap ( T ) ( JSONValue obj )
+public HashMap!(string, T) jsonToMap ( T ) ( JSONValue obj )
 in
 {
     assert(obj.type == obj.type.OBJECT, "Invalid JSON object");
 }
 body
 {
-    auto result = new HashMap!(char[], T);
+    auto result = new HashMap!(string, T);
 
     foreach ( key, val; obj.object )
     {
-        static if ( is(T == char[]) )
+        static if ( is(T == string) )
         {
-            result[cast(char[])key] = cast(char[])val.str;
+            result[key] = val.str;
         }
         else if ( is(T == double) )
         {
-            result[cast(char[])key] = cast(double)val.floating;
+            result[key] = cast(double)val.floating;
         }
         else
         {
@@ -150,21 +150,21 @@ unittest
 
     auto str = "{\"key1\": \"val1\", \"key2\": \"val2\"}";
     auto obj = parseJSON(str);
-    auto map = jsonToMap!(char[])(obj);
+    auto map = jsonToMap!(string)(obj);
 
-    assert(cast(char[])"key1" in map, err_msg);
-    assert(cast(char[])"key2" in map, err_msg);
-    assert(map[cast(char[])"key1"] == "val1", err_msg);
-    assert(map[cast(char[])"key2"] == "val2", err_msg);
+    assert("key1" in map, err_msg);
+    assert("key2" in map, err_msg);
+    assert(map["key1"] == "val1", err_msg);
+    assert(map["key2"] == "val2", err_msg);
 
     auto str2 = "{\"key1\": 1.23, \"key2\": 9.99}";
     auto obj2 = parseJSON(str2);
     auto map2 = jsonToMap!(double)(obj2);
 
-    assert(cast(char[])"key1" in map2, err_msg);
-    assert(cast(char[])"key2" in map2, err_msg);
-    assert(map2[cast(char[])"key1"] == 1.23, err_msg);
-    assert(map2[cast(char[])"key2"] == 9.99, err_msg);
+    assert("key1" in map2, err_msg);
+    assert("key2" in map2, err_msg);
+    assert(map2["key1"] == 1.23, err_msg);
+    assert(map2["key2"] == 9.99, err_msg);
 
 
     /**
@@ -193,10 +193,10 @@ unittest
      */
 
     JSONValue json_arr3 = parseJSON("[ \"val1\", \"val2\", \"val3\" ]");
-    auto str_arr2 = jsonToArray!(char[])(json_arr3);
+    auto str_arr2 = jsonToArray!(string)(json_arr3);
 
     assert(str_arr2.length == 3, err_msg);
-    assert(str_arr[0] == cast(char[])"val1", err_msg);
-    assert(str_arr[1] == cast(char[])"val2", err_msg);
-    assert(str_arr[2] == cast(char[])"val3", err_msg);
+    assert(str_arr[0] == "val1", err_msg);
+    assert(str_arr[1] == "val2", err_msg);
+    assert(str_arr[2] == "val3", err_msg);
 }

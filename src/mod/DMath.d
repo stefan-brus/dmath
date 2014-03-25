@@ -40,7 +40,7 @@ public class DMath : Application
      * The file to save and load the state to/from
      */
 
-    private static const char[] STATE_FILE = "state.json";
+    private static const string STATE_FILE = "state.json";
 
 
     /**
@@ -71,7 +71,7 @@ public class DMath : Application
      *      str_args = The command line arguments
      */
 
-    public this ( char[][] str_args )
+    public this ( string[] str_args )
     {
         super(str_args);
         this.file_parser = new FileParser;
@@ -93,9 +93,9 @@ public class DMath : Application
     protected override bool processArgs ( )
     {
         // Load the state from a file
-        if ( this.args.has(cast(char[])"-s") )
+        if ( this.args.has("-s") )
         {
-            auto file_name = this.args.get(cast(char[])"-s");
+            auto file_name = this.args.get("-s");
 
             this.saver = new StateSaver(this.evaluator, file_name);
 
@@ -110,13 +110,13 @@ public class DMath : Application
         }
         else
         {
-            this.saver = new StateSaver(this.evaluator, cast(char[])STATE_FILE);
+            this.saver = new StateSaver(this.evaluator, STATE_FILE);
         }
 
         // Evaluate expressions in a given file
-        if ( this.args.has(cast(char[])"-f") )
+        if ( this.args.has("-f") )
         {
-            auto expressions = this.file_parser.parseFile(this.args.get(cast(char[])"-f"));
+            auto expressions = this.file_parser.parseFile(this.args.get("-f"));
 
             foreach ( exp; expressions )
             {
@@ -174,13 +174,13 @@ public class DMath : Application
             writef("> ");
             stdin.readln(input_buf);
 
-            if ( Commands.instance.isCommand(strip(input_buf)) )
+            if ( Commands.instance.isCommand(cast(string)strip(input_buf)) )
             {
-                Commands.instance.exec(strip(input_buf));
+                Commands.instance.exec(cast(string)strip(input_buf));
             }
             else
             {
-                exp = this.evaluator.eval(input_buf);
+                exp = this.evaluator.eval(cast(string)input_buf);
                 writefln("%s", exp.eval);
             }
 

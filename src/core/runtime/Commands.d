@@ -39,7 +39,7 @@ public class Commands : Singleton!(Commands)
      * Map of commands
      */
 
-    private HashMap!(char[], CommandDg) comm_map;
+    private HashMap!(string, CommandDg) comm_map;
 
 
     /**
@@ -60,7 +60,7 @@ public class Commands : Singleton!(Commands)
 
     public void initCommands ( StringEvaluator evaluator, StateSaver saver, out bool quit )
     {
-        this.comm_map = new HashMap!(char[], CommandDg);
+        this.comm_map = new HashMap!(string, CommandDg);
 
         this.saver = saver;
 
@@ -79,9 +79,9 @@ public class Commands : Singleton!(Commands)
             this.saver.load;
         }
 
-        this.comm_map[cast(char[])"quit"] = &commQuit;
-        this.comm_map[cast(char[])"save"] = &commSave;
-        this.comm_map[cast(char[])"load"] = &commLoad;
+        this.comm_map["quit"] = &commQuit;
+        this.comm_map["save"] = &commSave;
+        this.comm_map["load"] = &commLoad;
     }
 
 
@@ -92,7 +92,7 @@ public class Commands : Singleton!(Commands)
      *      str = The string to check
      */
 
-    public bool isCommand ( char[] str )
+    public bool isCommand ( string str )
     {
         return str in this.comm_map;
     }
@@ -105,7 +105,7 @@ public class Commands : Singleton!(Commands)
      *      str = The command to execute
      */
 
-    public void exec ( char[] str )
+    public void exec ( string str )
     in
     {
         assert(this.isCommand(str), "Not a command: " ~ str);

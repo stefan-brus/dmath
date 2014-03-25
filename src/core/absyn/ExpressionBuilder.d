@@ -87,7 +87,7 @@ public class ExpressionBuilder
         }
         else
         {
-            char[] msg = cast(char[])"Mismatched tokens in expression";
+            auto msg = "Mismatched tokens in expression";
             throw new ExpException(msg);
         }
 
@@ -157,7 +157,7 @@ public class ExpressionBuilder
         else
         {
             auto msg = "Unknown expression: " ~ token.str;
-            throw new ExpException(msg);
+            throw new ExpException(cast(string)msg);
         }
     }
 
@@ -209,7 +209,7 @@ public class ExpressionBuilder
 
         if ( this.is_assignment )
         {
-            char[][] str_args;
+            string[] str_args;
 
             foreach ( arg; args )
             {
@@ -245,7 +245,7 @@ public class ExpressionBuilder
         {
             if ( !cast(Var)this.exp_stack.top && !cast(FnDef)this.exp_stack.top )
             {
-                throw new ExpException(cast(char[])"Assignment must be to variable or function definition");
+                throw new ExpException("Assignment must be to variable or function definition");
             }
         }
         exp.left = this.exp_stack.pop;

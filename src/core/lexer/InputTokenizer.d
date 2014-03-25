@@ -35,21 +35,21 @@ public class InputTokenizer
      * Buffer for the number currently being parsed
      */
 
-    private char[] number_buf;
+    private string number_buf;
 
 
     /**
      * Buffer for the string token currently being parsed
      */
 
-    private char[] str_buf;
+    private string str_buf;
 
 
     /**
      * Buffer for the whitespace-stripped input string
      */
 
-    private char[] stripped_str;
+    private string stripped_str;
 
 
     /**
@@ -73,7 +73,7 @@ public class InputTokenizer
      *      The array of tokens found in the string
      */
 
-    public Token[] parse ( char[] str )
+    public Token[] parse ( string str )
     {
         this.token_buf.length = 0;
 
@@ -100,12 +100,12 @@ public class InputTokenizer
             else if ( isParenthesis!LParenToken([c]) )
             {
                 this.addBufferedTokens(true);
-                this.token_buf ~= createParenthesis!LParenToken([c]);
+                this.token_buf ~= createParenthesis!LParenToken;
             }
             else if ( isParenthesis!RParenToken([c]) )
             {
                 this.addBufferedTokens;
-                this.token_buf ~= createParenthesis!RParenToken([c]);
+                this.token_buf ~= createParenthesis!RParenToken;
             }
             else if ( isSeparator([c]) )
             {

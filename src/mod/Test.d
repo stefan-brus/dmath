@@ -58,21 +58,21 @@ public class Test : Application
          * The file containing the test expressions
          */
 
-        char[] file;
+        string file;
 
 
         /**
          * The name of the test
          */
 
-        char[] name;
+        string name;
 
 
         /**
          * The description of the test
          */
 
-        char[] description;
+        string description;
 
 
         /**
@@ -107,14 +107,14 @@ public class Test : Application
           * If a fatal error occured during the test, this buffer contains the error message
           */
 
-        char[] fatal;
+        string fatal;
 
 
         /**
          * Error messages caught during the parsing of the test file are stored here
          */
 
-        char[][] parse_errs;
+        string[] parse_errs;
     }
 
 
@@ -155,7 +155,7 @@ public class Test : Application
      *      str_args = The command line arguments
      */
 
-    public this ( char[][] str_args )
+    public this ( string[] str_args )
     {
         super(str_args);
 
@@ -250,9 +250,9 @@ public class Test : Application
         foreach ( obj; this.config["tests"].array )
         {
             TestData test;
-            test.file = cast(char[])obj["file"].str;
-            test.name = cast(char[])obj["name"].str;
-            test.description = cast(char[])obj["description"].str;
+            test.file = obj["file"].str;
+            test.name = obj["name"].str;
+            test.description = obj["description"].str;
             test.count = cast(uint)obj["count"].integer;
 
             foreach ( val; obj["solutions"].array )
@@ -287,7 +287,7 @@ public class Test : Application
     {
         foreach ( ref test; this.tests )
         {
-            void errorHandler ( size_t test_idx, char[] msg )
+            void errorHandler ( size_t test_idx, string msg )
             {
                 if ( test_idx < test.parse_errs.length )
                 {
@@ -299,7 +299,7 @@ public class Test : Application
 
             if ( results.length != test.solutions.length )
             {
-                test.fatal = cast(char[])"Invalid number of test results";
+                test.fatal = "Invalid number of test results";
                 continue;
             }
 
@@ -333,7 +333,7 @@ public class Test : Application
         uint fatal_err_count;
         uint parse_err_count;
 
-        auto fail_map = new HashMap!(char[], uint[]);
+        auto fail_map = new HashMap!(string, uint[]);
 
         foreach ( test; this.tests )
         {

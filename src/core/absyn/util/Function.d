@@ -47,7 +47,7 @@ public class FnUtil : Singleton!(FnUtil)
      *      The function expression with replaced arguments
      */
 
-    public Exp call ( char[] name, Exp[] args )
+    public Exp call ( string name, Exp[] args )
     {
         /**
          * Replace delegate
@@ -67,7 +67,7 @@ public class FnUtil : Singleton!(FnUtil)
 
         if ( !cast(Function)SymbolTable.instance[name] )
         {
-            char[] msg = "Not a function: " ~ name;
+            auto msg = "Not a function: " ~ name;
             throw new ExpException(msg);
         }
 
@@ -75,7 +75,7 @@ public class FnUtil : Singleton!(FnUtil)
 
         if ( fn_sym.args.length != args.length )
         {
-            char[] msg = format("Mismatched arguments to function %s: Expected %s, got %s", name, fn_sym.args.length, args.length);
+            auto msg = format("Mismatched arguments to function %s: Expected %s, got %s", name, fn_sym.args.length, args.length);
             throw new ExpException(msg);
         }
 
@@ -92,7 +92,7 @@ public class FnUtil : Singleton!(FnUtil)
      *      args = The function arguments
      */
 
-    public void putFunction ( char[] name, Exp exp, char[][] args )
+    public void putFunction ( string name, Exp exp, string[] args )
     {
         auto replaced_exp = this.replaceArgRefs(exp, args);
 
@@ -111,7 +111,7 @@ public class FnUtil : Singleton!(FnUtil)
      *      The expression with replaced argument references
      */
 
-    public Exp replaceArgRefs ( Exp exp, char[][] args )
+    public Exp replaceArgRefs ( Exp exp, string[] args )
     {
         /**
          * Replace delegate

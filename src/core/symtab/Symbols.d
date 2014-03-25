@@ -91,7 +91,7 @@ public class Function : Symbol
      * The list of arguments
      */
 
-    public char[][] args;
+    public string[] args;
 
 
     /**
@@ -102,7 +102,7 @@ public class Function : Symbol
      *      args = The argument list
      */
 
-    public this ( Exp exp, char[][] args )
+    public this ( Exp exp, string[] args )
     {
         super(exp);
         this.args = args;

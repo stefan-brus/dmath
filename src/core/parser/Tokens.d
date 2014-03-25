@@ -23,7 +23,7 @@ public class Token
     /**
      * The string representation of this token
      */
-    protected char[] _str;
+    protected string _str;
 
 
     /**
@@ -33,7 +33,7 @@ public class Token
      *      str = The token string
      */
 
-    public this ( char[] str )
+    public this ( string str )
     {
         this._str = str;
     }
@@ -46,7 +46,7 @@ public class Token
      *      The string representation of this token
      */
 
-    public char[] str ( )
+    public string str ( )
     {
         return this._str;
     }
@@ -66,7 +66,7 @@ public class StrToken : Token
      *      str = The string representation of this token
      */
 
-    public this ( char[] str )
+    public this ( string str )
     {
         super(str);
     }
@@ -95,7 +95,7 @@ public class NumToken : Token
      *      str = The string representation of this token
      *      value = The value of this number
      */
-    public this ( char[] str, double value )
+    public this ( string str, double value )
     {
         super(str);
         this._value = value;
@@ -142,7 +142,7 @@ public class OpToken : Token
      *      left_assoc = Whether or not this operator is left associative
      */
 
-    public this ( char[] str, uint precedence, bool left_assoc )
+    public this ( string str, uint precedence, bool left_assoc )
     {
         super(str);
         this.precedence = precedence;
@@ -171,7 +171,7 @@ public class FnToken : OpToken
      *      str = The token string
      */
 
-    public this ( char[] str )
+    public this ( string str )
     {
         super(str, 10000, true);
     }
@@ -190,7 +190,7 @@ public class SepToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])",", 10000, true);
+        super(",", 10000, true);
     }
 }
 
@@ -208,7 +208,7 @@ public class ParenToken : OpToken
      *      str = The token string
      */
 
-    public this ( char[] str )
+    public this ( string str )
     {
         super(str, 0, true);
     }
@@ -227,7 +227,7 @@ public class LParenToken : ParenToken
 
     public this ( )
     {
-        super(cast(char[])"(");
+        super("(");
     }
 }
 
@@ -244,7 +244,7 @@ public class RParenToken : ParenToken
 
     public this ( )
     {
-        super(cast(char[])")");
+        super(")");
     }
 }
 
@@ -262,7 +262,7 @@ public class PlusToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"+", 10, true);
+        super("+", 10, true);
     }
 }
 
@@ -278,7 +278,7 @@ public class MinusToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"-", 10, true);
+        super("-", 10, true);
     }
 }
 
@@ -295,7 +295,7 @@ public class MultiToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"*", 20, true);
+        super("*", 20, true);
     }
 }
 
@@ -311,7 +311,7 @@ public class DivToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"/", 20, true);
+        super("/", 20, true);
     }
 }
 
@@ -328,7 +328,7 @@ public class ExpToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"^", 30, false);
+        super("^", 30, false);
     }
 }
 
@@ -345,7 +345,7 @@ public class AssignToken : OpToken
 
     public this ( )
     {
-        super(cast(char[])"=", 0, false);
+        super("=", 0, false);
     }
 }
 
@@ -360,7 +360,7 @@ public class AssignToken : OpToken
  *      A number token
  */
 
-public NumToken createNumber ( char[] str )
+public NumToken createNumber ( string str )
 in
 {
     assert(isNumeric(str), "Invalid number string");
@@ -387,7 +387,7 @@ body
  *      A string token
  */
 
-public StrToken createString ( char[] str )
+public StrToken createString ( string str )
 {
     return new StrToken(str);
 }
@@ -403,7 +403,7 @@ public StrToken createString ( char[] str )
  *      A function token
  */
 
-public FnToken createFunction ( char[] str )
+public FnToken createFunction ( string str )
 {
     return new FnToken(str);
 }
@@ -419,7 +419,7 @@ public FnToken createFunction ( char[] str )
  *      True if the string is a list separator
  */
 
-public bool isSeparator ( char[] str )
+public bool isSeparator ( string str )
 {
     return str == ",";
 }
@@ -448,7 +448,7 @@ public SepToken createSeparator ( )
  *      str = The string to check
  */
 
-public bool isParenthesis ( T : ParenToken ) ( char[] str )
+public bool isParenthesis ( T : ParenToken ) ( string str )
 {
     static if ( is(T == LParenToken) )
     {
@@ -470,12 +470,9 @@ public bool isParenthesis ( T : ParenToken ) ( char[] str )
  *
  * Template Params:
  *      T = The parenthesis token type
- *
- * Params:
- *      str = The parenthesis string
  */
 
-public T createParenthesis ( T : ParenToken ) ( char[] str )
+public T createParenthesis ( T : ParenToken ) ( )
 {
     return new T;
 }
@@ -491,7 +488,7 @@ public T createParenthesis ( T : ParenToken ) ( char[] str )
  *      True if str is an operator, false otherwise
  */
 
-public bool isOperator ( char[] str )
+public bool isOperator ( string str )
 {
     switch ( str )
     {
@@ -523,7 +520,7 @@ public bool isOperator ( char[] str )
  *      An operator token
  */
 
-public OpToken createOperator ( char[] str )
+public OpToken createOperator ( string str )
 in
 {
     assert(isOperator(str), "Invalid operator string");

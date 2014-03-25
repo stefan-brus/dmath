@@ -16,7 +16,7 @@ private import src.mod.Test;
  * Main program function
  */
 
-void main ( char[][] args )
+void main ( string[] args )
 {
     auto Test = new Test(args);
     Test.run;

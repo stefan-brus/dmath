@@ -6,7 +6,7 @@
  *
  * Usage example:
  * auto file_parser = new FileParser;
- * Exp[] expressions = file_parser.parse(cast(char[])"math.dmath");
+ * Exp[] expressions = file_parser.parse("math.dmath");
  */
 
 module src.core.util.dmath.FileParser;
@@ -37,7 +37,7 @@ public class FileParser
      * Parse error handler delegate alias
      */
 
-    private alias void delegate ( size_t idx, char[] msg ) ErrorDg;
+    private alias void delegate ( size_t idx, string msg ) ErrorDg;
 
 
     /**
@@ -79,7 +79,7 @@ public class FileParser
      *      The generated list of expressions
      */
 
-    public Exp[] parseFile ( char[] file, ErrorDg dg = null )
+    public Exp[] parseFile ( string file, ErrorDg dg = null )
     {
         this.exp_buf.length = 0;
 
@@ -107,7 +107,7 @@ public class FileParser
             {
                 if ( dg !is null )
                 {
-                    dg(exp_no, cast(char[])e.msg);
+                    dg(exp_no, e.msg);
                 }
                 else
                 {

@@ -50,9 +50,9 @@ public class SaveException : Exception
      *      msg = The error message
      */
 
-    public this ( char[] msg )
+    public this ( string msg )
     {
-        super(cast(string)msg);
+        super(msg);
     }
 }
 
@@ -74,7 +74,7 @@ public class StateSaver
      * The file to read and write
      */
 
-    private const char[] file;
+    private const string file;
 
 
     /**
@@ -85,7 +85,7 @@ public class StateSaver
      *      file = The file to read and write
      */
 
-    public this ( StringEvaluator evaluator, char[] file )
+    public this ( StringEvaluator evaluator, string file )
     {
         this.evaluator = evaluator;
         this.file = file;
@@ -107,8 +107,8 @@ public class StateSaver
             if ( cast(Variable)sym )
             {
                 JSONValue val;
-                val.str(cast(string)sym.exp.str);
-                json_obj[cast(string)name] = val;
+                val.str(sym.exp.str);
+                json_obj[name] = val;
             }
             else if ( cast(Function)sym )
             {
@@ -117,13 +117,13 @@ public class StateSaver
                 JSONValue exp_obj;
                 JSONValue args_obj;
 
-                exp_obj.str(cast(string)sym.exp.str);
+                exp_obj.str(sym.exp.str);
                 args_obj.array(arrayToJson((cast(Function)sym).args).array);
                 func_obj["exp"] = exp_obj;
                 func_obj["args"] = args_obj;
                 val.object(func_obj);
 
-                json_obj[cast(string)name] = val;
+                json_obj[name] = val;
             }
         }
 
@@ -147,7 +147,7 @@ public class StateSaver
     {
         if ( !exists(this.file) )
         {
-            char[] msg = cast(char[])"Can't find file: " ~ this.file;
+            auto msg = "Can't find file: " ~ this.file;
             throw new SaveException(msg);
         }
 
@@ -158,7 +158,7 @@ public class StateSaver
 
             if ( json_obj.type != json_obj.type.OBJECT )
             {
-                char[] msg = cast(char[])"Invalid JSON object type";
+                auto msg = "Invalid JSON object type";
                 throw new SaveException(msg);
             }
 
@@ -166,20 +166,20 @@ public class StateSaver
             {
                 if ( val.type == val.type.STRING )
                 {
-                    auto exp = this.evaluator.eval(cast(char[])val.str);
-                    SymbolTable.instance[cast(char[])key] = exp;
+                    auto exp = this.evaluator.eval(val.str);
+                    SymbolTable.instance[key] = exp;
                 }
                 else if ( val.type == val.type.OBJECT )
                 {
-                    auto exp = this.evaluator.eval(cast(char[])val.object["exp"].str);
-                    auto args = jsonToArray!(char[])(val.object["args"]);
-                    FnUtil.instance.putFunction(cast(char[])key, exp, args);
+                    auto exp = this.evaluator.eval(val.object["exp"].str);
+                    auto args = jsonToArray!(string)(val.object["args"]);
+                    FnUtil.instance.putFunction(key, exp, args);
                 }
             }
         }
         catch ( Exception e )
         {
-            char[] msg = cast(char[])"Error loading: " ~ e.msg;
+            auto msg = "Error loading: " ~ e.msg;
             throw new SaveException(msg);
         }
     }

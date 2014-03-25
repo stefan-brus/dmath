@@ -40,9 +40,9 @@ public class SymtabException : Exception
      *      msg = The error message
      */
 
-    public this ( char[] msg )
+    public this ( string msg )
     {
-        super(cast(string)msg);
+        super(msg);
     }
 }
 
@@ -59,7 +59,7 @@ public class SymbolTable : Singleton!(SymbolTable)
      * Internal variable name => symbol map
      */
 
-    private HashMap!(char[], Symbol) sym_map;
+    private HashMap!(string, Symbol) sym_map;
 
 
     /**
@@ -72,7 +72,7 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      value = The value of the constant
      */
 
-    public void putConstant ( char[] name, double value )
+    public void putConstant ( string name, double value )
     {
         this.sym_map[name] = new Constant(new Num(value));
     }
@@ -87,7 +87,7 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      args = The argument list
      */
 
-    public void putFunction ( char[] name, Exp exp, char[][] args )
+    public void putFunction ( string name, Exp exp, string[] args )
     {
         if ( name in this.sym_map && cast(Function)this.sym_map[name] )
         {
@@ -109,11 +109,11 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      var = The variable name string
      */
 
-    public void opIndexAssign ( Exp exp, char[] var )
+    public void opIndexAssign ( Exp exp, string var )
     {
         if ( var in this.sym_map && cast(Constant)this.sym_map[var] )
         {
-            char[] msg = "Cannot overwrite constant " ~ var;
+            auto msg = "Cannot overwrite constant " ~ var;
             throw new SymtabException(msg);
         }
 
@@ -141,11 +141,11 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      SymtabException if the variable is not defined
      */
 
-    public Symbol opIndex ( char[] var )
+    public Symbol opIndex ( string var )
     {
         if ( !(var in this.sym_map) )
         {
-            char[] msg = "Symbol " ~ var ~ " not defined";
+            auto msg = "Symbol " ~ var ~ " not defined";
             throw new SymtabException(msg);
         }
 
@@ -163,7 +163,7 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      True if the variable exists, false otherwise
      */
 
-    public bool opIn_r ( char[] var )
+    public bool opIn_r ( string var )
     {
         return var in this.sym_map;
     }
@@ -180,7 +180,7 @@ public class SymbolTable : Singleton!(SymbolTable)
      *      Magic
      */
 
-    public int opApply ( int delegate ( ref char[] key, ref Symbol val ) dg )
+    public int opApply ( int delegate ( ref string key, ref Symbol val ) dg )
     {
         int result = 0;
 
@@ -214,6 +214,6 @@ public class SymbolTable : Singleton!(SymbolTable)
 
     protected override void init ( )
     {
-        this.sym_map = new HashMap!(char[], Symbol);
+        this.sym_map = new HashMap!(string, Symbol);
     }
 }

@@ -25,15 +25,15 @@ private import std.string;
  *      The array of strings found in the file
  */
 
-public char[][] readLines ( const char[] file_name )
+public string[] readLines ( string file_name )
 {
-    char[][] result;
-    auto file = File(cast(string)file_name, "r");
+    string[] result;
+    auto file = File(file_name, "r");
 
     while ( !file.eof )
     {
         auto line = chomp(file.readln);
-        result ~= cast(char[])line;
+        result ~= line;
     }
 
     return result;
@@ -52,9 +52,9 @@ public char[][] readLines ( const char[] file_name )
  *      The contents of the file as a string
  */
 
- public char[] fileAsStr ( const char[] file_name )
+ public string fileAsStr ( string file_name )
  {
-    char[] result;
+    string result;
     auto lines = readLines(file_name);
 
     foreach ( str; lines )

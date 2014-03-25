@@ -63,9 +63,9 @@ public bool isWhitespace ( char c )
  *      The string with whitespace removed
  */
 
-public char[] removeWhitespace ( char[] str )
+public string removeWhitespace ( string str )
 {
-    char[] result;
+    string result;
 
     foreach ( c; str )
     {
@@ -105,7 +105,7 @@ public bool isComment ( char c )
  *      True if the string is a comment, false otherwise
  */
 
-public bool isComment ( char[] str )
+public bool isComment ( string str )
 {
     return str.length > 0 && isComment(strip(str)[0]);
 }
@@ -151,9 +151,9 @@ unittest
      * removeWhitespace
      */
 
-    assert(removeWhitespace(cast(char[])"") == "", err_msg);
-    assert(removeWhitespace(cast(char[])"abc") == "abc", err_msg);
-    assert(removeWhitespace(cast(char[])" he    \t\r\n ll   o ") == "hello", err_msg);
+    assert(removeWhitespace("") == "", err_msg);
+    assert(removeWhitespace("abc") == "abc", err_msg);
+    assert(removeWhitespace(" he    \t\r\n ll   o ") == "hello", err_msg);
 
 
     /**

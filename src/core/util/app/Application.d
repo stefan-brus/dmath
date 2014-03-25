@@ -36,7 +36,7 @@ public abstract class Application
      *      str_args = The command line arguments as received by main
      */
 
-    public this ( char[][] str_args )
+    public this ( string[] str_args )
     {
         this.args = new Arguments(str_args);
     }

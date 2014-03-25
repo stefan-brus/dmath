@@ -26,7 +26,7 @@ public class Arguments
      * Internal argument to value map
      */
 
-    private HashMap!(char[], char[]) arg_map;
+    private HashMap!(string, string) arg_map;
 
 
     /**
@@ -39,9 +39,9 @@ public class Arguments
      *
      */
 
-    public this ( char[][] str_args )
+    public this ( string[] str_args )
     {
-        this.arg_map = new HashMap!(char[], char[]);
+        this.arg_map = new HashMap!(string, string);
 
         if ( str_args.length > 1 )
         {
@@ -60,7 +60,7 @@ public class Arguments
      *      True if the argument exists, false otherwise
      */
 
-    public bool has ( char[] arg )
+    public bool has ( string arg )
     {
         return arg in this.arg_map;
     }
@@ -76,7 +76,7 @@ public class Arguments
      *      The value of the argument
      */
 
-    public char[] get ( char[] arg )
+    public string get ( string arg )
     in
     {
         assert(arg in this.arg_map, "Argument does not exist");
@@ -95,7 +95,7 @@ public class Arguments
      *      str_args = The array of string arguments
      */
 
-    private void setupArgs( char[][] str_args )
+    private void setupArgs( string[] str_args )
     {
         for ( int i = 0; i < str_args.length - 1; i += 2 )
         {
@@ -122,11 +122,11 @@ unittest
      * Arguments tests
      */
 
-    char[][] str_args = cast(char[][])[ "dmath", "-arg1", "val1", "-arg2", "val2" ];
+    string[] str_args = [ "dmath", "-arg1", "val1", "-arg2", "val2" ];
     auto args = new Arguments(str_args);
-    assert(args.has(cast(char[])"-arg1"), err_msg);
-    assert(args.has(cast(char[])"-arg2"), err_msg);
-    assert(!args.has(cast(char[])"-arg3"), err_msg);
-    assert(args.get(cast(char[])"-arg1") == "val1", err_msg);
-    assert(args.get(cast(char[])"-arg2") == "val2", err_msg);
+    assert(args.has("-arg1"), err_msg);
+    assert(args.has("-arg2"), err_msg);
+    assert(!args.has("-arg3"), err_msg);
+    assert(args.get("-arg1") == "val1", err_msg);
+    assert(args.get("-arg2") == "val2", err_msg);
 }

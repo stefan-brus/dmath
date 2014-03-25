@@ -35,9 +35,9 @@ public class ParseException : Exception
      *      msg = The error message
      */
 
-    public this ( char[] msg )
+    public this ( string msg )
     {
-        super(cast(string)msg);
+        super(msg);
     }
 }
 
@@ -171,7 +171,7 @@ public class Parser
                 }
                 else
                 {
-                    char[] msg = cast(char[])"Mismatched parentheses";
+                    auto msg = "Mismatched parentheses";
                     throw new ParseException(msg);
                 }
             }
@@ -196,7 +196,7 @@ public class Parser
 
                 if ( !found_paren )
                 {
-                    char[] msg = cast(char[])"Mismatched parentheses";
+                    auto msg = "Mismatched parentheses";
                     throw new ParseException(msg);
                 }
 
@@ -223,8 +223,8 @@ public class Parser
             }
             else
             {
-                char[] msg = "Unknown token: " ~ t.str;
-                throw new ParseException(msg);
+                auto msg = "Unknown token: " ~ t.str;
+                throw new ParseException(cast(string)msg);
             }
         }
 

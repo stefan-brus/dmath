@@ -31,9 +31,9 @@ public class ExpException : Exception
      *      msg = The error message
      */
 
-    public this ( char[] msg )
+    public this ( string msg )
     {
-        super(cast(string)msg);
+        super(msg);
     }
 }
 
@@ -67,7 +67,7 @@ public abstract class Exp
      *      The string of this expression's value, and its children's string representations
      */
 
-    public abstract char[] str ( );
+    public abstract string str ( );
 
 
     /**
@@ -121,9 +121,9 @@ public class Num : Exp
      * Get the string representation of this expression
      */
 
-    public override char[] str ( )
+    public override string str ( )
     {
-        return cast(char[])format("%s", this.eval);
+        return format("%s", this.eval);
     }
 
 
@@ -148,7 +148,7 @@ public class Var : Exp
      * The variable name
      */
 
-    private char[] name;
+    private string name;
 
 
     /**
@@ -159,7 +159,7 @@ public class Var : Exp
      *      symtab = The symbol table reference
      */
 
-    public this ( char[] name )
+    public this ( string name )
     {
         this.name = name;
     }
@@ -184,7 +184,7 @@ public class Var : Exp
      * Get the string representation of this expression
      */
 
-    public override char[] str ( )
+    public override string str ( )
     {
         return this.name;
     }
@@ -226,7 +226,7 @@ public abstract class BinOp : Exp
      * The string representation of this operator
      */
 
-    private char[] op_str;
+    private string op_str;
 
 
     /**
@@ -237,7 +237,7 @@ public abstract class BinOp : Exp
      *      op_str = The string representation of this operator
      */
 
-    public this ( BinOpDg eval_dg, char[] op_str )
+    public this ( BinOpDg eval_dg, string op_str )
     {
         this.eval_dg = eval_dg;
         this.op_str = op_str;
@@ -259,7 +259,7 @@ public abstract class BinOp : Exp
      * Get the string representation of this expression
      */
 
-    public override char[] str ( )
+    public override string str ( )
     {
         return format("(%s %s %s)", this.left.str, this.op_str, this.right.str);
     }
@@ -298,7 +298,7 @@ public abstract class FnExp ( T ) : Exp
      * The function name
      */
 
-    public char[] name;
+    public string name;
 
 
     /**
@@ -323,7 +323,7 @@ public abstract class FnExp ( T ) : Exp
      *      args = The argument list
      */
 
-    public this ( char[] name, T[] args )
+    public this ( string name, T[] args )
     {
         this.name = name;
         this.args = args;
@@ -334,9 +334,9 @@ public abstract class FnExp ( T ) : Exp
      * Get the string representation of this expression
      */
 
-    public override char[] str ( )
+    public override string str ( )
     {
-        char[] result = format("%s(", this.name);
+        auto result = format("%s(", this.name);
 
         foreach ( i, arg; this.args )
         {
@@ -366,7 +366,7 @@ public abstract class FnExp ( T ) : Exp
  * Function definition class
  */
 
-public class FnDef : FnExp!(char[])
+public class FnDef : FnExp!(string)
 {
     /**
      * Constructor
@@ -376,7 +376,7 @@ public class FnDef : FnExp!(char[])
      *      args = The argument list
      */
 
-    public this ( char[] name, char[][] args )
+    public this ( string name, string[] args )
     {
         super(name, args);
     }
@@ -389,7 +389,7 @@ public class FnDef : FnExp!(char[])
 
     public override double eval ( )
     {
-        char[] msg = cast(char[])"Cannot evaluate function definition";
+        auto msg = "Cannot evaluate function definition";
         throw new ExpException(msg);
         return 0;
     }
@@ -427,7 +427,7 @@ public class FnArg : Var
      *      idx = The index of this argument
      */
 
-    public this ( char[] name, uint idx )
+    public this ( string name, uint idx )
     {
         super(name);
         this.idx = idx;
@@ -445,7 +445,7 @@ public class FnArg : Var
 
     public override double eval ( )
     {
-        char[] msg = cast(char[])"Cannot evaluate function argument";
+        auto msg = "Cannot evaluate function argument";
         throw new ExpException(msg);
         return 0;
     }
@@ -476,7 +476,7 @@ public class FnCall : FnExp!(Exp)
      *      args = The argument list
      */
 
-    public this ( char[] name, Exp[] args )
+    public this ( string name, Exp[] args )
     {
         super(name, args);
     }
@@ -522,7 +522,7 @@ public class Add : BinOp
             return left.eval + right.eval;
         }
 
-        super(&plus, cast(char[])"+");
+        super(&plus, "+");
     }
 
 
@@ -554,7 +554,7 @@ public class Sub : BinOp
             return left.eval - right.eval;
         }
 
-        super(&minus, cast(char[])"-");
+        super(&minus, "-");
     }
 
 
@@ -586,7 +586,7 @@ public class Multi : BinOp
             return left.eval * right.eval;
         }
 
-        super(&multiply, cast(char[])"*");
+        super(&multiply, "*");
     }
 
 
@@ -623,7 +623,7 @@ public class Div : BinOp
             return left.eval / right.eval;
         }
 
-        super(&divide, cast(char[])"/");
+        super(&divide, "/");
     }
 
 
@@ -663,7 +663,7 @@ public class Pow : BinOp
             return this.power(left.eval, to!uint(right.eval));
         }
 
-        super(&power, cast(char[])"^");
+        super(&power, "^");
     }
 
 
@@ -740,7 +740,7 @@ public class Assign : BinOp
             }
         }
 
-        super(&assign, cast(char[])"=");
+        super(&assign, "=");
     }
 
 

@@ -16,7 +16,7 @@ private import src.mod.DMath;
  * Main program function
  */
 
-void main ( char[][] args )
+void main ( string[] args )
 {
     auto DMath = new DMath(args);
     DMath.run;

@@ -10,7 +10,7 @@
  *
  * Example usage:
  *
- * auto map = new HashMap!(char[], uint);
+ * auto map = new HashMap!(string, uint);
  *
  * // Put two elements in the map
  * map["one"] = 1;
