@@ -1,14 +1,14 @@
 # Common for all targets
-COMMON_SRC = src/core/absyn/Expression.d src/core/absyn/ExpressionBuilder.d \
-	src/core/absyn/util/Function.d src/core/absyn/util/ExpTree.d \
-	src/core/parser/Grammar.d src/core/parser/Parser.d \
-	src/core/runtime/Commands.d src/core/runtime/Constants.d \
-	src/core/symtab/Symbols.d src/core/symtab/SymbolTable.d \
-    src/core/util/Array.d src/core/util/File.d src/core/util/JSON.d src/core/util/String.d \
-    src/core/util/app/Application.d src/core/util/app/Arguments.d \
-    src/core/util/container/Stack.d src/core/util/container/Queue.d src/core/util/container/HashMap.d \
-    src/core/util/dmath/FileParser.d src/core/util/dmath/StateSaver.d src/core/util/dmath/StringEvaluator.d \
-    src/core/util/tmpl/Singleton.d
+COMMON_SRC = src/dmath/absyn/Expression.d src/dmath/absyn/ExpressionBuilder.d \
+	src/dmath/absyn/util/Function.d src/dmath/absyn/util/ExpTree.d \
+	src/dmath/parser/Grammar.d src/dmath/parser/Parser.d \
+	src/dmath/runtime/Commands.d src/dmath/runtime/Constants.d \
+	src/dmath/symtab/Symbols.d src/dmath/symtab/SymbolTable.d \
+    src/dmath/util/Array.d src/dmath/util/File.d src/dmath/util/JSON.d src/dmath/util/String.d \
+    src/dmath/util/app/Application.d src/dmath/util/app/Arguments.d \
+    src/dmath/util/container/Stack.d src/dmath/util/container/Queue.d src/dmath/util/container/HashMap.d \
+    src/dmath/util/dmath/FileParser.d src/dmath/util/dmath/StateSaver.d src/dmath/util/dmath/StringEvaluator.d \
+    src/dmath/util/tmpl/Singleton.d
 
 
 # Pegged source files
@@ -17,11 +17,11 @@ PEGGED_SRC = Pegged/pegged/peg.d Pegged/pegged/grammar.d Pegged/pegged/parser.d 
 
 
 # Main target
-MAIN_TARGET = src/main/dmath.d src/mod/DMath.d $(COMMON_SRC) $(PEGGED_SRC)
+MAIN_TARGET = src/dmath/DMath.d $(COMMON_SRC) $(PEGGED_SRC)
 
 
 # Test target
-TEST_TARGET = src/main/test.d src/mod/Test.d $(COMMON_SRC) $(PEGGED_SRC)
+TEST_TARGET = src/dmath/Test.d $(COMMON_SRC) $(PEGGED_SRC)
 
 
 # dmd flags

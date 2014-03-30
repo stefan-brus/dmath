@@ -1,4 +1,6 @@
 # Random files that annoy me personally when developing
-dmath.*
-test.*
+dmath.exe
+dmath.obj
+test.exe
+test.obj
 state.json
