@@ -4,8 +4,7 @@ b = 4
 b
 b = 73
 b
-a = b = c = 89
 a
 b
-c
+c = 89
 a + b + c

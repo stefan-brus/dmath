@@ -163,6 +163,37 @@ body
 
 
 /**
+ * Combines all elements in the given list of arrays into one array
+ *
+ * Template Params:
+ *      T = The type of elements stored in the arrays
+ *
+ * Params:
+ *      arrs = The arrays to flatten
+ *
+ * Returns:
+ *      The flattened array
+ */
+
+public T[] flatten ( T ) ( T[][] arrs )
+in
+{
+    assert(arrs.length, "Empty array");
+}
+body
+{
+    T[] result;
+
+    foreach ( arr; arrs )
+    {
+        result ~= arr;
+    }
+
+    return result;
+}
+
+
+/**
  * Unittests
  */
 
@@ -215,4 +246,12 @@ unittest
     assert(arr.length == 3, err_msg);
     assert(indexOf(arr, 79) == 1, err_msg);
     assert(indexOf(arr, 3) == 0, err_msg);
+
+
+    /**
+     * flatten
+     */
+
+    assert(flatten([[1, 2, 3], [4, 5, 6, 7], [], [8]]) == [1, 2, 3, 4, 5, 6, 7, 8], err_msg);
+    assert(flatten(["Flatten ", "Test"]) == "Flatten Test", err_msg);
 }

@@ -13,13 +13,17 @@ module src.core.absyn.ExpressionBuilder;
  * Imports
  */
 
+private import src.core.absyn.util.ExpTree;
+
 private import src.core.absyn.Expression;
 
-private import src.core.parser.Tokens;
+private import src.core.parser.Grammar;
 
-private import src.core.util.container.Queue;
+private import src.core.util.Array;
 
-private import src.core.util.container.Stack;
+private import pegged.peg;
+
+private import std.conv;
 
 
 /**
@@ -29,66 +33,113 @@ private import src.core.util.container.Stack;
 public class ExpressionBuilder
 {
     /**
-     * Expression stack
+     * State to keep track of assignment lvalues
      */
 
-    private Stack!Exp exp_stack;
+    private bool assign;
 
 
     /**
-     * Whether or not this expression is an assignment
-     */
-
-    private bool is_assignment;
-
-
-    /**
-     * Constructor
-     */
-
-    public this ( )
-    {
-        this.exp_stack = new Stack!Exp;
-    }
-
-
-    /**
-     * Build an expression tree
-     * Uses the tokens stored in reverse polish notation in the given postfix queue
+     * Build an expression tree from the given parse tree
+     *
      * Unknown or mismatched tokens throw exceptions
      *
      * Params:
-     *      post_queue = The postfix token queue
-     *      is_assignment = Whether or not this expression is an assignment
+     *      p = The parse tree
      *
      * Returns:
      *      The generated expression
      *
      * Throws:
-     *      ParseException: If mismatched or unknown token is found
+     *      ExpException: If mismatched or unknown parse token is found
      */
 
-    public Exp buildExpression ( Queue!Token post_queue, bool is_assignment )
+    public Exp build ( ParseTree p )
     {
-        this.is_assignment = is_assignment;
-
-        Exp result;
-
-        while ( post_queue.size > 0 )
+        switch ( p.name )
         {
-            auto token = post_queue.dequeue;
+            case "DMath":
+                return this.build(p.children[0]);
 
-            this.addExp(token);
+            case "DMath.Expr":
+                return this.createExp(p);
+
+            case "DMath.Assign":
+                return this.createBinOp!Assign(p);
+
+            case "DMath.Term":
+                return this.createExp(p);
+
+            case "DMath.Add":
+                return this.createBinOp!Add(p);
+
+            case "DMath.Sub":
+                return this.createBinOp!Sub(p);
+
+            case "DMath.Factor":
+                return this.createExp(p);
+
+            case "DMath.Mul":
+                return this.createBinOp!Multi(p);
+
+            case "DMath.Div":
+                return this.createBinOp!Div(p);
+
+            case "DMath.Comp":
+                return this.createExp(p);
+
+            case "DMath.Pow":
+                return this.createBinOp!Pow(p);
+
+            case "DMath.Primary":
+                return this.build(p.children[0]);
+
+            case "DMath.Parens":
+                return this.build(p.children[0]);
+
+            case "DMath.Neg":
+                return this.createNum(p);
+
+            case "DMath.Number":
+                return this.createNum(p);
+
+            case "DMath.Function":
+                return this.createFn(p);
+
+            case "DMath.Variable":
+                return this.createVar(p);
+
+            default:
+                throw new ExpException("Unkown parse token");
         }
+    }
 
-        if ( this.exp_stack.size == 1)
+
+    /**
+     * Builds a list of expressions from the given parse tree
+     *
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The array of built expressions
+     */
+
+    private Exp[] buildList ( ParseTree p )
+    in
+    {
+        assert(p.name == "DMath.TermList", "Not an expression list");
+    }
+    body
+    {
+        Exp[] result;
+
+        foreach ( child; p.children )
         {
-            result = this.exp_stack.pop;
-        }
-        else
-        {
-            auto msg = "Mismatched tokens in expression";
-            throw new ExpException(msg);
+            if ( child.name == "DMath.Term" )
+            {
+                result ~= this.build(child);
+            }
         }
 
         return result;
@@ -96,159 +147,151 @@ public class ExpressionBuilder
 
 
     /**
-     * Reset the expression builder
-     */
-
-    public void reset ( )
-    {
-        this.exp_stack.clear;
-        this.is_assignment = false;
-    }
-
-
-    /**
-     * Adds an expression to the stack based on the given token
+     * Create an arbitrary expression from a given recursive parse token
      *
      * Params:
-     *      token = The token
+     *      p = The parse tree
      *
-     * Throws:
-     *      ParseException: If unknown token is given
+     * Returns:
+     *      The created expression
      */
 
-    private void addExp ( Token token )
+    private Exp createExp ( ParseTree p )
+    in
     {
-        if ( cast(NumToken)token )
-        {
-            this.addNum(cast(NumToken)token);
-        }
-        else if ( cast(StrToken)token )
-        {
-            this.addVar(cast(StrToken)token);
-        }
-        else if ( cast(FnToken)token )
-        {
-            this.addFn(cast(FnToken)token);
-        }
-        else if ( cast(PlusToken)token )
-        {
-            this.addBinOp!Add;
-        }
-        else if ( cast(MinusToken)token )
-        {
-            this.addBinOp!Sub;
-        }
-        else if ( cast(MultiToken)token )
-        {
-            this.addBinOp!Multi;
-        }
-        else if ( cast(DivToken)token )
-        {
-            this.addBinOp!Div;
-        }
-        else if ( cast(ExpToken)token )
-        {
-            this.addBinOp!Pow;
-        }
-        else if ( cast(AssignToken)token )
-        {
-            this.addBinOp!Assign;
-        }
-        else
-        {
-            auto msg = "Unknown expression: " ~ token.str;
-            throw new ExpException(cast(string)msg);
-        }
+        assert(p.name == "DMath.Expr" || p.name == "DMath.Term" || p.name == "DMath.Factor" || p.name == "DMath.Comp", "Not a valid expression token");
     }
-
-
-    /**
-     * Adds a number expression to the stack based on the given token
-     *
-     * Params:
-     *      token = The token to get the value from
-     */
-
-    private void addNum ( NumToken token )
+    body
     {
-        auto exp = new Num(token.value);
-        this.exp_stack.push(exp);
-    }
+        Exp result;
 
-
-    /**
-     * Adds a variable expression to the stack based on the given token
-     *
-     * Params:
-     *      token = The token to get the variable name from
-     */
-
-    private void addVar ( StrToken token )
-    {
-        auto exp = new Var(token.str);
-        this.exp_stack.push(exp);
-    }
-
-
-    /**
-     * Adds a function expression to the stack based on the given token
-     * If is_assignment is true, adds an FnDef, otherwise an FnCall
-     *
-     * Params:
-     *      token = The token to get function data from
-     */
-
-    private void addFn ( FnToken token )
-    {
-        Exp[] args;
-
-        for ( uint i = 0; i < token.args; i++ )
+        if ( p.name == "DMath.Expr" && p.children.length > 1 )
         {
-            args ~= this.exp_stack.pop;
+            this.assign = true;
         }
 
-        if ( this.is_assignment )
-        {
-            string[] str_args;
+        Exp left = this.build(p.children[0]);
 
-            foreach ( arg; args )
+        if ( p.name == "DMath.Expr" && p.children.length > 1 )
+        {
+            this.assign = false;
+        }
+
+        if ( p.children.length > 1 )
+        {
+            Exp prev = left;
+
+            foreach ( child; p.children[1 .. $] )
             {
-                str_args ~= arg.str;
+                result = build(child);
+                result.left = prev;
+                prev = result.copy;
             }
-
-            auto exp = new FnDef(token.str, str_args);
-            this.exp_stack.push(exp);
         }
         else
         {
-            auto exp = new FnCall(token.str, args);
-            this.exp_stack.push(exp);
+            result = left;
         }
+
+        return result;
     }
 
 
     /**
-     * Adds a binary operation expression of the given type to the stack
+     * Create a binary operator expression, if the parse tree contains an operator
      *
      * Template Params:
-     *      T = The expression type to add to the stack
+     *      T = The type of operator expression to create
      *
-     * Throws:
-     *      ExpException if trying to add an assignment to a non-variable expression
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The created expression
      */
 
-    private void addBinOp ( T : BinOp ) ( )
+    private Exp createBinOp ( T : BinOp ) ( ParseTree p )
     {
-        auto exp = new T;
-        exp.right = this.exp_stack.pop;
-        static if ( is(T == Assign) )
+        Exp result = new T;
+        result.right = this.build(p.children[0]);
+        return result;
+    }
+
+
+    /**
+     * Creates a number expression from the given parse tree
+     *
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The created number expression
+     */
+
+    private Exp createNum ( ParseTree p )
+    in
+    {
+        assert(p.name == "DMath.Number" || p.name == "DMath.Neg", "Not a number token");
+    }
+    body
+    {
+        return new Num(to!double(flatten(p.matches)));
+    }
+
+
+    /**
+     * Creates a variable expression from the given parse tree
+     *
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The created variable expression
+     */
+
+    private Exp createVar ( ParseTree p )
+    in
+    {
+        assert(p.name == "DMath.Variable", "Not a variable token");
+    }
+    body
+    {
+        return new Var(p.matches[0]);
+    }
+
+
+    /**
+     * Creates a function expression from the given parse tree
+     *
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The created function expression
+     */
+    private import std.stdio;
+    private Exp createFn ( ParseTree p )
+    in
+    {
+        assert(p.name == "DMath.Function", "Not a function token");
+    }
+    body
+    {
+        Exp result;
+
+        auto args = this.buildList(p.children[1]);
+
+        auto name = p.matches[0];
+
+        if ( this.assign )
         {
-            if ( !cast(Var)this.exp_stack.top && !cast(FnDef)this.exp_stack.top )
-            {
-                throw new ExpException("Assignment must be to variable or function definition");
-            }
+            result = new FnDef(name, ExpUtil.instance.toStrList(args));
         }
-        exp.left = this.exp_stack.pop;
-        this.exp_stack.push(exp);
+        else
+        {
+            result = new FnCall(name, args);
+        }
+
+        return result;
     }
 }

@@ -719,12 +719,12 @@ public class Assign : BinOp
     public this ( )
     {
         double assign(Exp var, Exp val)
-        in
         {
-            assert(cast(Var)var || cast(FnDef)var, "Left hand of assignment must be a variable");
-        }
-        body
-        {
+            if ( !(cast(Var)var || cast(FnDef)var) )
+            {
+                throw new ExpException("Left hand of assignment must be a variable or function definition");
+            }
+
             if ( cast(FnDef) var )
             {
                 auto args = (cast(FnDef)var).args;

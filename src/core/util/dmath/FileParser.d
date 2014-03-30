@@ -129,6 +129,5 @@ public class FileParser
     public void reset ( )
     {
         this.exp_buf.length = 0;
-        this.evaluator.reset;
     }
 }

@@ -116,11 +116,21 @@ public class DMath : Application
         // Evaluate expressions in a given file
         if ( this.args.has("-f") )
         {
-            auto expressions = this.file_parser.parseFile(this.args.get("-f"));
+            auto file_name = this.args.get("-f");
 
-            foreach ( exp; expressions )
+            try
             {
-                writefln("%s", exp.eval);
+                auto expressions = this.file_parser.parseFile(this.args.get("-f"));
+
+                foreach ( exp; expressions )
+                {
+                    writefln("%s", exp.eval);
+                }
+            }
+            catch ( Exception e )
+            {
+                writefln("Unable to parse file: %s, reason: %s", file_name, e.msg);
+                return false;
             }
 
             return false;
@@ -169,8 +179,6 @@ public class DMath : Application
 
         while ( !quit )
         {
-            this.evaluator.reset;
-
             writef("> ");
             stdin.readln(input_buf);
 
@@ -201,6 +209,5 @@ public class DMath : Application
     protected override void reset ( )
     {
         this.file_parser.reset;
-        this.evaluator.reset;
     }
 }

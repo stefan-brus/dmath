@@ -71,4 +71,27 @@ public class ExpUtil : Singleton!(ExpUtil)
 
         return new_exp;
     }
+
+
+    /**
+     * Transforms an expression list into a string list
+     *
+     * Params:
+     *      exps = The expressions
+     *
+     * Returns:
+     *      The generated string list
+     */
+
+    public string[] toStrList ( Exp[] exps )
+    {
+        string[] result;
+
+        foreach ( exp; exps )
+        {
+            result ~= exp.str;
+        }
+
+        return result;
+    }
 }

@@ -3,6 +3,8 @@ DMath
 
 Mathematical expression evaluator written in D.
 
+Uses the parser generator Pegged: https://github.com/PhilippeSigaud/Pegged
+
 Usage examples
 =====
 

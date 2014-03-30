@@ -20,8 +20,6 @@ private import src.core.absyn.Expression;
 
 private import src.core.absyn.ExpressionBuilder;
 
-private import src.core.lexer.InputTokenizer;
-
 private import src.core.parser.Parser;
 
 private import std.string;
@@ -33,13 +31,6 @@ private import std.string;
 
 public class StringEvaluator
 {
-    /**
-     * Input tokenizer
-     */
-
-    private InputTokenizer tokenizer;
-
-
     /**
      * Parser
      */
@@ -60,7 +51,6 @@ public class StringEvaluator
 
     public this ( )
     {
-        this.tokenizer = new InputTokenizer;
         this.parser = new Parser;
         this.exp_builder = new ExpressionBuilder;
     }
@@ -78,26 +68,10 @@ public class StringEvaluator
 
     public Exp eval ( string str )
     {
-        bool is_assignment;
+        auto parse_tree = this.parser.parse(strip(str));
 
-        auto tokens = tokenizer.parse(strip(str));
-
-        auto post_queue = this.parser.parse(tokens, is_assignment);
-
-        auto exp = this.exp_builder.buildExpression(post_queue, is_assignment);
+        auto exp = this.exp_builder.build(parse_tree);
 
         return exp;
-    }
-
-
-    /**
-     * Reset the state of the string evaluator
-     */
-
-    public void reset ( )
-    {
-        this.tokenizer.reset;
-        this.parser.reset;
-        this.exp_builder.reset;
     }
 }
