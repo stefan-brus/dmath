@@ -1,0 +1,12 @@
+4i
+7.3i
+4 - 4i
+-2 + 2.3i
+{1.73,-2.2} + 7i * pi
+{2, 100} / {100, 2}
+var = 2 + 3i
+var
+f(x) = 2 + 3 * x
+f(var)
+
+# TODO: Add tests for exponent operator

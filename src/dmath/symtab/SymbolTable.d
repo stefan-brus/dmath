@@ -81,6 +81,8 @@ public class SymbolTable : Singleton!(SymbolTable)
     /**
      * Puts a function into the symbol table
      *
+     * WARNING: Use dmath.absyn.util.Function.FnUtil.putFunction instead of this one!
+     *
      * Params:
      *      name = The name of the function
      *      exp = The function expression

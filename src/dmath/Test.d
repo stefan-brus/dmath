@@ -13,6 +13,8 @@ module dmath.Test;
  * Imports
  */
 
+private import dmath.absyn.Expression;
+
 private import dmath.runtime.Constants;
 
 private import dmath.util.app.Application;
@@ -86,14 +88,14 @@ public class Test : Application
          * The array of expected solutions for the tests
          */
 
-        double[] solutions;
+        ValType[] solutions;
 
 
         /**
          * The array of calculated values for the tests
          */
 
-        double[] values;
+        ValType[] values;
 
 
         /**
@@ -257,19 +259,66 @@ public class Test : Application
 
             foreach ( val; obj["solutions"].array )
             {
-                if ( val.type == val.type.FLOAT )
+                if ( val.type == val.type.ARRAY )
                 {
-                    test.solutions ~= cast(double)val.floating;
+                    test.solutions ~= this.makeComplex(val.array);
                 }
                 else
                 {
-                    test.solutions ~= val.integer;
+                    test.solutions ~= this.makeNum(val);
                 }
             }
 
             test.parse_errs.length = test.solutions.length;
 
             this.tests ~= test;
+        }
+    }
+
+
+    /**
+     * Create a complex value from the given JSON array
+     *
+     * Params:
+     *      arr = The JSON array
+     *
+     * Returns:
+     *      The complex value
+     */
+
+    private ValType makeComplex ( JSONValue[] arr )
+    in
+    {
+        assert(arr.length == 2, "Invalid complex number format");
+    }
+    body
+    {
+        double val_real = this.makeNum(arr[0]).val;
+        double val_imag = this.makeNum(arr[1]).val;
+
+        return cast(ValType)ComplexVal(val_real, val_imag);
+    }
+
+
+    /**
+     * Create a number from the given JSON value
+     *
+     * Params:
+     *      val = The JSON value
+     *
+     * Returns:
+     *      The number value
+     */
+
+    private ValType makeNum ( JSONValue val )
+    {
+        if ( val.type == val.type.FLOAT )
+        {
+            return ValType(cast(double)val.floating);
+        }
+        else
+        {
+            return ValType(cast(double)val.integer);
         }
     }
 
@@ -309,7 +358,13 @@ public class Test : Application
 
                 test.values ~= exp.eval;
 
-                if ( approxEqual(exp.eval, test.solutions[i]) )
+                if ( exp.type == exp.type.Real &&
+                     approxEqual(exp.eval.val, test.solutions[i].val) )
+                {
+                    test.results ~= TestResult.Succeeded;
+                }
+                else if ( exp.type == exp.type.Complex &&
+                          this.compareComplex(exp.eval.complex, test.solutions[i].complex) )
                 {
                     test.results ~= TestResult.Succeeded;
                 }
@@ -321,6 +376,24 @@ public class Test : Application
                 }
             }
         }
+    }
+
+
+    /**
+     * Compare two complex numbers
+     *
+     * Params:
+     *      c1 = The first complex number
+     *      c2 = The second complex number
+     *
+     * Returns:
+     *      True if they are approximately equal, false otherwise
+     */
+
+    private bool compareComplex ( ComplexVal c1, ComplexVal c2 )
+    {
+        return approxEqual(c1.real_val, c2.real_val) &&
+               approxEqual(c1.imag_val, c2.imag_val);
     }
 
 

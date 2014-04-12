@@ -109,6 +109,9 @@ public class ExpressionBuilder
             case "DMath.Variable":
                 return this.createVar(p);
 
+            case "DMath.Complex":
+                return this.createComplex(p);
+
             default:
                 throw new ExpException("Unkown parse token");
         }
@@ -269,7 +272,7 @@ public class ExpressionBuilder
      * Returns:
      *      The created function expression
      */
-    private import std.stdio;
+
     private Exp createFn ( ParseTree p )
     in
     {
@@ -290,6 +293,44 @@ public class ExpressionBuilder
         else
         {
             result = new FnCall(name, args);
+        }
+
+        return result;
+    }
+
+
+    /**
+     * Creates a complex expression from the given parse tree
+     *
+     * Params:
+     *      p = The parse tree
+     *
+     * Returns:
+     *      The created complex expression
+     */
+
+    private Exp createComplex( ParseTree p )
+    in
+    {
+        assert(p.name == "DMath.Complex", "Not a complex token");
+    }
+    body
+    {
+        auto result = new Complex;
+
+        if ( p.children.length == 1 )
+        {
+            result.left = new Num(0);
+            result.right = this.build(p.children[0]);
+        }
+        else if ( p.children.length == 2 )
+        {
+            result.left = this.build(p.children[0]);
+            result.right = this.build(p.children[1]);
+        }
+        else
+        {
+            throw new ExpException("Unknown complex number format");
         }
 
         return result;

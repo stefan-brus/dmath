@@ -11,6 +11,10 @@ module dmath.absyn.Expression;
 
 private import dmath.absyn.util.Function;
 
+private import dmath.math.Complex;
+
+private import dmath.math.Math;
+
 private import dmath.symtab.SymbolTable;
 
 private import std.conv;
@@ -39,6 +43,55 @@ public class ExpException : Exception
 
 
 /**
+ * Complex value type
+ */
+
+public struct ComplexVal
+{
+    double real_val = 0;
+    double imag_val = 0;
+
+    string str ( )
+    {
+        return format("{%s, %si}", this.real_val, this.imag_val);
+    }
+}
+
+
+/**
+ * The different types an expression can evaluate to
+ */
+
+public union ValType
+{
+    /**
+     * Real value
+     */
+
+    double val;
+
+
+    /**
+     * Complex value
+     */
+
+    ComplexVal complex;
+}
+
+
+/**
+ * The actual type of the expression
+ */
+
+public enum Type
+{
+    Invalid = 0,
+    Real = 1,
+    Complex = 2
+}
+
+
+/**
  * Base expression class
  */
 
@@ -54,10 +107,17 @@ public abstract class Exp
 
 
     /**
+     * The type of this expression
+     */
+
+    public Type type = Type.Real;
+
+
+    /**
      * Abstract function to evaluate this expression
      */
 
-    public abstract double eval ( );
+    public abstract ValType eval ( );
 
 
     /**
@@ -90,7 +150,7 @@ public class Num : Exp
      * The value of this number expression
      */
 
-    private double val;
+    private ValType val;
 
 
     /**
@@ -102,7 +162,7 @@ public class Num : Exp
 
     public this ( double val )
     {
-       this.val = val;
+       this.val = ValType(val);
     }
 
 
@@ -111,7 +171,7 @@ public class Num : Exp
      * Returns the numeric value
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
         return this.val;
     }
@@ -123,7 +183,7 @@ public class Num : Exp
 
     public override string str ( )
     {
-        return format("%s", this.eval);
+        return format("%s", this.val.val);
     }
 
 
@@ -133,7 +193,66 @@ public class Num : Exp
 
     public override Exp copy ( )
     {
-        return new Num(this.val);
+        return new Num(this.val.val);
+    }
+}
+
+
+/**
+ * Complex number expression class
+ *
+ * "left" is the real value, "right" is the imaginary value
+ */
+
+public class Complex : Exp
+{
+    /**
+     * Constructor
+     */
+
+    public this ( )
+    {
+        this.type = Type.Complex;
+    }
+
+
+    /**
+     * Evaluate this expression
+     *
+     * Returns a complex value
+     */
+
+    public override ValType eval ( )
+    {
+        if ( left.type == Type.Complex || right.type == Type.Complex )
+        {
+            throw new ExpException("Complex number cannot have complex components");
+        }
+
+        return cast(ValType)ComplexVal(this.left.eval.val, this.right.eval.val);
+    }
+
+
+    /**
+     * Get the string representation of this expression
+     */
+
+    public override string str ( )
+    {
+        return format("{%s, %si}", left.str, right.str);
+    }
+
+
+    /**
+     * Copy this expression
+     */
+
+    public override Exp copy ( )
+    {
+        auto result = new Complex;
+        result.left = this.left.copy;
+        result.right = this.right.copy;
+        return result;
     }
 }
 
@@ -174,7 +293,7 @@ public class Var : Exp
      *      The value of the variable
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
         return SymbolTable.instance[name].exp.eval;
     }
@@ -216,10 +335,20 @@ public abstract class BinOp : Exp
 
 
     /**
-     * Child expression evaluator
+     * Complex operation evaluation delegate
+     * Call a function on both child expressions
+     */
+
+    private alias ComplexVal delegate(Exp, Exp) ComplexOpDg;
+
+
+    /**
+     * Child expression evaluators
      */
 
     private BinOpDg eval_dg;
+
+    private ComplexOpDg complex_dg;
 
 
     /**
@@ -234,12 +363,14 @@ public abstract class BinOp : Exp
      *
      * Params:
      *      eval_dg = Child expression evaluator delegate
+     *      complex_dg = Complex expression evaluator delegate
      *      op_str = The string representation of this operator
      */
 
-    public this ( BinOpDg eval_dg, string op_str )
+    public this ( BinOpDg eval_dg, ComplexOpDg complex_dg, string op_str )
     {
         this.eval_dg = eval_dg;
+        this.complex_dg = complex_dg;
         this.op_str = op_str;
     }
 
@@ -249,9 +380,20 @@ public abstract class BinOp : Exp
      * Calls the evaluation delegate on both child expressions
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
-        return this.eval_dg(this.left, this.right);
+        ValType result;
+
+        if ( this.type == Type.Real )
+        {
+            result = cast(ValType)this.eval_dg(left, right);
+        }
+        else if ( this.type == Type.Complex )
+        {
+            result = cast(ValType)this.complex_dg(left, right);
+        }
+
+        return result;
     }
 
 
@@ -306,13 +448,6 @@ public abstract class FnExp ( T ) : Exp
      */
 
     public T[] args;
-
-
-    /**
-     * Function expression
-     */
-
-    protected Exp exp;
 
 
     /**
@@ -387,11 +522,10 @@ public class FnDef : FnExp!(string)
      * Throws an exception, because function definitions cannot be evaluated
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
         auto msg = "Cannot evaluate function definition";
         throw new ExpException(msg);
-        return 0;
     }
 
 
@@ -443,11 +577,10 @@ public class FnArg : Var
      *      The value of the variable
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
         auto msg = "Cannot evaluate function argument";
         throw new ExpException(msg);
-        return 0;
     }
 
 
@@ -488,7 +621,7 @@ public class FnCall : FnExp!(Exp)
      * Calls the function with the argument list
      */
 
-    public override double eval ( )
+    public override ValType eval ( )
     {
         return FnUtil.instance.call(this.name, this.args).eval;
     }
@@ -519,10 +652,15 @@ public class Add : BinOp
     {
         double plus(Exp left, Exp right)
         {
-            return left.eval + right.eval;
+            return left.eval.val + right.eval.val;
         }
 
-        super(&plus, "+");
+        ComplexVal complex(Exp left, Exp right)
+        {
+            return ComplexUtil.instance.add(left.eval.complex, right.eval.complex);
+        }
+
+        super(&plus, &complex, "+");
     }
 
 
@@ -551,10 +689,15 @@ public class Sub : BinOp
     {
         double minus(Exp left, Exp right)
         {
-            return left.eval - right.eval;
+            return left.eval.val - right.eval.val;
         }
 
-        super(&minus, "-");
+        ComplexVal complex(Exp left, Exp right)
+        {
+            return ComplexUtil.instance.sub(left.eval.complex, right.eval.complex);
+        }
+
+        super(&minus, &complex, "-");
     }
 
 
@@ -583,10 +726,15 @@ public class Multi : BinOp
     {
         double multiply(Exp left, Exp right)
         {
-            return left.eval * right.eval;
+            return left.eval.val * right.eval.val;
         }
 
-        super(&multiply, "*");
+        ComplexVal complex(Exp left, Exp right)
+        {
+            return ComplexUtil.instance.multiply(left.eval.complex, right.eval.complex);
+        }
+
+        super(&multiply, &complex, "*");
     }
 
 
@@ -614,16 +762,21 @@ public class Div : BinOp
     public this ( )
     {
         double divide(Exp left, Exp right)
-        in
         {
-            assert(right.eval != 0, "Division by zero");
-        }
-        body
-        {
-            return left.eval / right.eval;
+            if ( right.eval.val == 0 )
+            {
+                throw new ExpException("Division by zero");
+            }
+
+            return left.eval.val / right.eval.val;
         }
 
-        super(&divide, "/");
+        ComplexVal complex(Exp left, Exp right)
+        {
+            return ComplexUtil.instance.divide(left.eval.complex, right.eval.complex);
+        }
+
+        super(&divide, &complex, "/");
     }
 
 
@@ -654,42 +807,16 @@ public class Pow : BinOp
     public this ( )
     {
         double power(Exp left, Exp right)
-        in
         {
-            assert(right.eval >= 0, "Negative exponent");
-        }
-        body
-        {
-            return this.power(left.eval, to!uint(right.eval));
+            return MathUtil.instance.pow(left.eval.val, to!uint(right.eval.val));
         }
 
-        super(&power, "^");
-    }
-
-
-    /**
-     * Iterative power calculator function
-     *
-     * Params:
-     *      num = The number
-     *      exp = The exponent
-     */
-
-    private double power ( double num, uint exp )
-    {
-        if ( exp == 0 )
+        ComplexVal complex(Exp left, Exp right)
         {
-            return 1;
+            return ComplexUtil.instance.pow(left.eval.complex, right.eval.complex);
         }
 
-        double result = num;
-
-        for ( uint i = 1; i < exp; i++ )
-        {
-            result *= num;
-        }
-
-        return result;;
+        super(&power, &complex, "^");
     }
 
 
@@ -736,11 +863,25 @@ public class Assign : BinOp
             {
                 SymbolTable.instance[var.str] = val;
 
-                return val.eval;
+                return val.eval.val;
             }
         }
 
-        super(&assign, "=");
+        ComplexVal complex(Exp var, Exp val)
+        {
+            assign(var, val);
+
+            if ( cast(FnDef) var )
+            {
+                return ComplexVal(0, 0);
+            }
+            else
+            {
+                return val.eval.complex;
+            }
+        }
+
+        super(&assign, &complex, "=");
     }
 
 

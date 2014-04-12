@@ -1,6 +1,7 @@
 # Common for all targets
 COMMON_SRC = src/dmath/absyn/Expression.d src/dmath/absyn/ExpressionBuilder.d \
-	src/dmath/absyn/util/Function.d src/dmath/absyn/util/ExpTree.d \
+	src/dmath/absyn/util/Function.d src/dmath/absyn/util/ExpTree.d src/dmath/absyn/util/Type.d \
+	src/dmath/math/Complex.d src/dmath/math/Logarithm.d src/dmath/math/Math.d src/dmath/math/Trigonometry.d \
 	src/dmath/parser/Grammar.d src/dmath/parser/Parser.d \
 	src/dmath/runtime/Commands.d src/dmath/runtime/Constants.d \
 	src/dmath/symtab/Symbols.d src/dmath/symtab/SymbolTable.d \

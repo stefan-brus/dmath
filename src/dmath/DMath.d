@@ -9,6 +9,8 @@ module dmath.DMath;
  * Imports
  */
 
+private import dmath.absyn.util.Type;
+
 private import dmath.absyn.Expression;
 
 private import dmath.runtime.Commands;
@@ -124,7 +126,7 @@ public class DMath : Application
 
                 foreach ( exp; expressions )
                 {
-                    writefln("%s", exp.eval);
+                    this.printExp(TypeUtil.instance.infer(exp));
                 }
             }
             catch ( Exception e )
@@ -189,7 +191,8 @@ public class DMath : Application
             else
             {
                 exp = this.evaluator.eval(cast(string)input_buf);
-                writefln("%s", exp.eval);
+
+                this.printExp(exp);
             }
 
             if ( quit )
@@ -209,6 +212,39 @@ public class DMath : Application
     protected override void reset ( )
     {
         this.file_parser.reset;
+    }
+
+
+    /**
+     * Print the given expression
+     *
+     * Params:
+     *      exp = The expression to print
+     */
+
+    private void printExp ( Exp exp )
+    {
+        with ( Type ) switch ( exp.type )
+        {
+            case Real:
+                writefln("%s", exp.eval.val);
+                break;
+            case Complex:
+                auto val = exp.eval.complex;
+
+                if ( val.imag_val == 0 )
+                {
+                    writefln("%s", exp.eval.val);
+                }
+                else
+                {
+                    writefln("%s", exp.eval.complex.str);
+                }
+
+                break;
+            default:
+                assert(false, "Unknown expression type");
+        }
     }
 }
 

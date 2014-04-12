@@ -11,6 +11,8 @@ module dmath.absyn.util.Function;
 
 private import dmath.absyn.util.ExpTree;
 
+private import dmath.absyn.util.Type;
+
 private import dmath.absyn.Expression;
 
 private import dmath.symtab.Symbols;
@@ -37,6 +39,7 @@ public class FnUtil : Singleton!(FnUtil)
      *
      * Fetches the function from the symbol table
      * Replaces the FnArg expressions in the function expression with the actual arguments
+     * Does type inference
      * Returns the expression with replaced arguments
      *
      * Params:
@@ -79,7 +82,7 @@ public class FnUtil : Singleton!(FnUtil)
             throw new ExpException(msg);
         }
 
-        return ExpUtil.instance.replace(fn_sym.exp.copy, &replace_dg);
+        return TypeUtil.instance.infer(ExpUtil.instance.replace(fn_sym.exp.copy, &replace_dg));
     }
 
 

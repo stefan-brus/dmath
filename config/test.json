@@ -183,6 +183,24 @@
                 6,
                 12
             ]
+        },
+        {
+            "file": "test/complex.dmath",
+            "name": "Complex",
+            "description": "Tests for complex numbers",
+            "count": 9,
+            "solutions": [
+                [0, 4],
+                [0, 7.3],
+                [4, -4],
+                [-2, 2.3],
+                [1.73, 19.7911],
+                [0.039984, 0.9992],
+                [2, 3],
+                [2, 3],
+                0,
+                [8, 9]
+            ]
         }
     ]
 }

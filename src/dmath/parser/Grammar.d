@@ -28,7 +28,7 @@ DMath:
     Comp     < Primary Pow*
     Pow      < "^" Comp
 
-    Primary  < Parens / Neg / Number / Function / Variable
+    Primary  < Complex / Parens / Neg / Number / Function / Variable
     Parens   < "(" Term ")"
     Neg      < "-" Primary
     Number   < ~([0-9]+) ("." ~([0-9]+))*
@@ -37,4 +37,5 @@ DMath:
     TermList < Term ("," Term)*
     Variable <- identifier
 
+    Complex <- "{" Term "," Term "}" / (Parens / Neg / Number) "i"
 `));

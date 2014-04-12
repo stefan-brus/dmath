@@ -16,6 +16,8 @@
   * Imports
   */
 
+private import dmath.absyn.util.Type;
+
 private import dmath.absyn.Expression;
 
 private import dmath.absyn.ExpressionBuilder;
@@ -59,6 +61,8 @@ public class StringEvaluator
     /**
      * Evaluate a dmath expression string
      *
+     * Does type inference
+     *
      * Params:
      *      str = The expression string
      *
@@ -72,6 +76,6 @@ public class StringEvaluator
 
         auto exp = this.exp_builder.build(parse_tree);
 
-        return exp;
+        return TypeUtil.instance.infer(exp);
     }
 }
