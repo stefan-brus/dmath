@@ -78,13 +78,6 @@ public class Test : Application
 
 
         /**
-         * The number of tests i the fle
-         */
-
-        uint count;
-
-
-        /**
          * The array of expected solutions for the tests
          */
 
@@ -255,7 +248,6 @@ public class Test : Application
             test.file = obj["file"].str;
             test.name = obj["name"].str;
             test.description = obj["description"].str;
-            test.count = cast(uint)obj["count"].integer;
 
             foreach ( val; obj["solutions"].array )
             {
