@@ -40,11 +40,11 @@ public class TypeUtil : Singleton!(TypeUtil)
     {
         bool isComplex ( Exp exp )
         {
-            if ( cast(Var)exp && exp.str in SymbolTable.instance )
+            if ( cast(Var)exp && exp.str in SymbolTable() )
             {
-                return SymbolTable.instance[exp.str].exp.type == Type.Complex;
+                return SymbolTable()[exp.str].exp.type == Type.Complex;
             }
-            else if ( cast(FnCall)exp && (cast(FnCall)exp).name in SymbolTable.instance )
+            else if ( cast(FnCall)exp && (cast(FnCall)exp).name in SymbolTable() )
             {
                 foreach ( arg; (cast(FnCall)exp).args )
                 {
@@ -54,7 +54,7 @@ public class TypeUtil : Singleton!(TypeUtil)
                     }
                 }
 
-                return SymbolTable.instance[(cast(FnCall)exp).name].exp.type == Type.Complex;
+                return SymbolTable()[(cast(FnCall)exp).name].exp.type == Type.Complex;
             }
             else
             {
@@ -70,9 +70,9 @@ public class TypeUtil : Singleton!(TypeUtil)
 
         Exp result;
 
-        if ( ExpUtil.instance.exists(exp, &isComplex) )
+        if ( ExpUtil().exists(exp, &isComplex) )
         {
-            result = ExpUtil.instance.replaceIf(exp, ( Exp e ) => !isComplex(e) || cast(Var)e || cast(FnCall)e, &setComplex);
+            result = ExpUtil().replaceIf(exp, ( Exp e ) => !isComplex(e) || cast(Var)e || cast(FnCall)e, &setComplex);
         }
         else
         {

@@ -102,7 +102,7 @@ public class StateSaver
     {
         JSONValue[string] json_obj;
 
-        foreach ( name, sym; SymbolTable.instance )
+        foreach ( name, sym; SymbolTable() )
         {
             if ( cast(Variable)sym )
             {
@@ -167,13 +167,13 @@ public class StateSaver
                 if ( val.type == val.type.STRING )
                 {
                     auto exp = this.evaluator.eval(val.str);
-                    SymbolTable.instance[key] = exp;
+                    SymbolTable()[key] = exp;
                 }
                 else if ( val.type == val.type.OBJECT )
                 {
                     auto exp = this.evaluator.eval(val.object["exp"].str);
                     auto args = jsonToArray!(string)(val.object["args"]);
-                    FnUtil.instance.putFunction(key, exp, args);
+                    FnUtil().putFunction(key, exp, args);
                 }
             }
         }

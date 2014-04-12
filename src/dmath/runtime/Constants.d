@@ -50,7 +50,7 @@ public class Constants : Singleton!(Constants)
     {
         try
         {
-            auto symtab = SymbolTable.instance;
+            auto symtab = SymbolTable();
             auto json_str = fileAsStr("config/constants.json");
             auto json = parseJSON(json_str);
             auto map = jsonToMap!(double)(json);

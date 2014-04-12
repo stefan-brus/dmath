@@ -68,13 +68,13 @@ public class FnUtil : Singleton!(FnUtil)
             }
         }
 
-        if ( !cast(Function)SymbolTable.instance[name] )
+        if ( !cast(Function)SymbolTable()[name] )
         {
             auto msg = "Not a function: " ~ name;
             throw new ExpException(msg);
         }
 
-        Function fn_sym = cast(Function) SymbolTable.instance[name];
+        Function fn_sym = cast(Function) SymbolTable()[name];
 
         if ( fn_sym.args.length != args.length )
         {
@@ -82,7 +82,7 @@ public class FnUtil : Singleton!(FnUtil)
             throw new ExpException(msg);
         }
 
-        return TypeUtil.instance.infer(ExpUtil.instance.replace(fn_sym.exp.copy, &replace_dg));
+        return TypeUtil().infer(ExpUtil().replace(fn_sym.exp.copy, &replace_dg));
     }
 
 
@@ -99,7 +99,7 @@ public class FnUtil : Singleton!(FnUtil)
     {
         auto replaced_exp = this.replaceArgRefs(exp, args);
 
-        SymbolTable.instance.putFunction(name, replaced_exp, args);
+        SymbolTable().putFunction(name, replaced_exp, args);
     }
 
 
@@ -132,6 +132,6 @@ public class FnUtil : Singleton!(FnUtil)
             }
         }
 
-        return ExpUtil.instance.replace(exp, &replace_dg);
+        return ExpUtil().replace(exp, &replace_dg);
     }
 }

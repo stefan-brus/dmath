@@ -69,8 +69,8 @@ public class TrigUtil : Singleton!(TrigUtil)
             int plus_factor = i * 2 + 1;
             int minus_factor = (i + 1) * 2 + 1;
 
-            result += MathUtil.instance.pow(rad, plus_factor) / MathUtil.instance.fac(plus_factor);
-            result -= MathUtil.instance.pow(rad, minus_factor) / MathUtil.instance.fac(minus_factor);
+            result += MathUtil().pow(rad, plus_factor) / MathUtil().fac(plus_factor);
+            result -= MathUtil().pow(rad, minus_factor) / MathUtil().fac(minus_factor);
         }
 
         return result;
@@ -94,7 +94,7 @@ public class TrigUtil : Singleton!(TrigUtil)
     }
     body
     {
-        return MathUtil.instance.sqrt(1 - MathUtil.instance.pow(this.sin(num), 2));
+        return MathUtil().sqrt(1 - MathUtil().pow(this.sin(num), 2));
     }
 
 
@@ -139,7 +139,7 @@ public class TrigUtil : Singleton!(TrigUtil)
         {
             double result = 0;
 
-            num = MathUtil.instance.abs(num);
+            num = MathUtil().abs(num);
             num %= MathUtil.PI / 2;
 
             for ( uint i = 0; i < PRECISION * 2; i += 2 )
@@ -147,8 +147,8 @@ public class TrigUtil : Singleton!(TrigUtil)
                 auto plus_factor = i * 2 + 1;
                 auto minus_factor = (i + 1) * 2 + 1;
 
-                result += MathUtil.instance.pow(num, plus_factor) / plus_factor;
-                result -= MathUtil.instance.pow(num, minus_factor) / minus_factor;
+                result += MathUtil().pow(num, plus_factor) / plus_factor;
+                result -= MathUtil().pow(num, minus_factor) / minus_factor;
             }
 
             return result;
@@ -224,7 +224,7 @@ public class TrigUtil : Singleton!(TrigUtil)
     }
     body
     {
-        auto abs = MathUtil.instance.abs(num);
+        auto abs = MathUtil().abs(num);
 
         return num % MathUtil.PI;
     }

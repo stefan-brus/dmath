@@ -40,7 +40,7 @@ public class Singleton ( T )
      *      The singleton instance
      */
 
-    public static T instance ( )
+    public static T opCall ( )
     {
         if ( _instance is null )
         {

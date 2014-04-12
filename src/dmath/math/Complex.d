@@ -77,7 +77,7 @@ public class ComplexUtil : Singleton!(ComplexUtil)
             throw new ExpException("Complex argument: real value is zero");
         }
 
-        return TrigUtil.instance.atan2(c.imag_val, c.real_val);
+        return TrigUtil().atan2(c.imag_val, c.real_val);
     }
 
     /**
@@ -185,13 +185,13 @@ public class ComplexUtil : Singleton!(ComplexUtil)
     {
         double a = c1.real_val, b = c1.imag_val, c = c2.real_val, d = c2.imag_val;
 
-        double term = (c * this.arg(c1)) + ((d / 2) * LogUtil.instance.ln(a * a + b * b));
+        double term = (c * this.arg(c1)) + ((d / 2) * LogUtil().ln(a * a + b * b));
 
-        ComplexVal factor = ComplexVal(MathUtil.instance.pow(a * a + b * b, cast(int)(c / 2)) * MathUtil.instance.pow(MathUtil.E, cast(int)(-d * this.arg(c1))), 0);
+        ComplexVal factor = ComplexVal(MathUtil().pow(a * a + b * b, cast(int)(c / 2)) * MathUtil().pow(MathUtil.E, cast(int)(-d * this.arg(c1))), 0);
 
-        ComplexVal real_term = ComplexVal(TrigUtil.instance.cos(term), 0);
+        ComplexVal real_term = ComplexVal(TrigUtil().cos(term), 0);
 
-        ComplexVal imag_term = this.multiply(I, ComplexVal(TrigUtil.instance.sin(term), 0));
+        ComplexVal imag_term = this.multiply(I, ComplexVal(TrigUtil().sin(term), 0));
 
         return this.add(this.multiply(factor, real_term), this.multiply(factor, imag_term));
     }

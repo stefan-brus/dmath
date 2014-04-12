@@ -186,7 +186,7 @@ public class Test : Application
 
     protected override bool appMain ( bool first_run )
     {
-        Constants.instance.initConstants;
+        Constants().initConstants;
 
         try
         {

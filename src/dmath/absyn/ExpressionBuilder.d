@@ -288,7 +288,7 @@ public class ExpressionBuilder
 
         if ( this.assign )
         {
-            result = new FnDef(name, ExpUtil.instance.toStrList(args));
+            result = new FnDef(name, ExpUtil().toStrList(args));
         }
         else
         {

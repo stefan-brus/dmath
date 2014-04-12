@@ -295,7 +295,7 @@ public class Var : Exp
 
     public override ValType eval ( )
     {
-        return SymbolTable.instance[name].exp.eval;
+        return SymbolTable()[name].exp.eval;
     }
 
 
@@ -623,7 +623,7 @@ public class FnCall : FnExp!(Exp)
 
     public override ValType eval ( )
     {
-        return FnUtil.instance.call(this.name, this.args).eval;
+        return FnUtil().call(this.name, this.args).eval;
     }
 
 
@@ -657,7 +657,7 @@ public class Add : BinOp
 
         ComplexVal complex(Exp left, Exp right)
         {
-            return ComplexUtil.instance.add(left.eval.complex, right.eval.complex);
+            return ComplexUtil().add(left.eval.complex, right.eval.complex);
         }
 
         super(&plus, &complex, "+");
@@ -694,7 +694,7 @@ public class Sub : BinOp
 
         ComplexVal complex(Exp left, Exp right)
         {
-            return ComplexUtil.instance.sub(left.eval.complex, right.eval.complex);
+            return ComplexUtil().sub(left.eval.complex, right.eval.complex);
         }
 
         super(&minus, &complex, "-");
@@ -731,7 +731,7 @@ public class Multi : BinOp
 
         ComplexVal complex(Exp left, Exp right)
         {
-            return ComplexUtil.instance.multiply(left.eval.complex, right.eval.complex);
+            return ComplexUtil().multiply(left.eval.complex, right.eval.complex);
         }
 
         super(&multiply, &complex, "*");
@@ -773,7 +773,7 @@ public class Div : BinOp
 
         ComplexVal complex(Exp left, Exp right)
         {
-            return ComplexUtil.instance.divide(left.eval.complex, right.eval.complex);
+            return ComplexUtil().divide(left.eval.complex, right.eval.complex);
         }
 
         super(&divide, &complex, "/");
@@ -808,12 +808,12 @@ public class Pow : BinOp
     {
         double power(Exp left, Exp right)
         {
-            return MathUtil.instance.pow(left.eval.val, to!uint(right.eval.val));
+            return MathUtil().pow(left.eval.val, to!uint(right.eval.val));
         }
 
         ComplexVal complex(Exp left, Exp right)
         {
-            return ComplexUtil.instance.pow(left.eval.complex, right.eval.complex);
+            return ComplexUtil().pow(left.eval.complex, right.eval.complex);
         }
 
         super(&power, &complex, "^");
@@ -855,13 +855,13 @@ public class Assign : BinOp
             if ( cast(FnDef) var )
             {
                 auto args = (cast(FnDef)var).args;
-                FnUtil.instance.putFunction((cast(FnDef)var).name, val, args);
+                FnUtil().putFunction((cast(FnDef)var).name, val, args);
 
                 return 0;
             }
             else
             {
-                SymbolTable.instance[var.str] = val;
+                SymbolTable()[var.str] = val;
 
                 return val.eval.val;
             }

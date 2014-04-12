@@ -4,7 +4,7 @@
  * Stores variables in a hash table of string to expression entries
  *
  * Usage example:
- * auto symtab = SymbolTable.instance;
+ * auto symtab = SymbolTable();
  * Exp exp = ... // pretend that exp represents 7 * 3
  * symtab["x"] = exp;
  * "x" in symtab; // true

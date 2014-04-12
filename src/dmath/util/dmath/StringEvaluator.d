@@ -76,6 +76,6 @@ public class StringEvaluator
 
         auto exp = this.exp_builder.build(parse_tree);
 
-        return TypeUtil.instance.infer(exp);
+        return TypeUtil().infer(exp);
     }
 }

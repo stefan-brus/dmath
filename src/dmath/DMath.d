@@ -126,7 +126,7 @@ public class DMath : Application
 
                 foreach ( exp; expressions )
                 {
-                    this.printExp(TypeUtil.instance.infer(exp));
+                    this.printExp(TypeUtil().infer(exp));
                 }
             }
             catch ( Exception e )
@@ -159,7 +159,7 @@ public class DMath : Application
 
     protected override bool appMain ( bool first_run )
     {
-        Constants.instance.initConstants;
+        Constants().initConstants;
 
         if ( !this.processArgs )
         {
@@ -172,7 +172,7 @@ public class DMath : Application
 
         Exp exp;
 
-        Commands.instance.initCommands(this.evaluator, this.saver, quit);
+        Commands().initCommands(this.evaluator, this.saver, quit);
 
         if ( first_run )
         {
@@ -184,9 +184,9 @@ public class DMath : Application
             writef("> ");
             stdin.readln(input_buf);
 
-            if ( Commands.instance.isCommand(cast(string)strip(input_buf)) )
+            if ( Commands().isCommand(cast(string)strip(input_buf)) )
             {
-                Commands.instance.exec(cast(string)strip(input_buf));
+                Commands().exec(cast(string)strip(input_buf));
             }
             else
             {

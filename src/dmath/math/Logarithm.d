@@ -65,9 +65,9 @@ public class LogUtil : Singleton!(LogUtil)
             throw new MathException("Logartihm of 0");
         }
 
-        auto digits = MathUtil.instance.digits(num);
+        auto digits = MathUtil().digits(num);
 
-        num /= MathUtil.instance.pow(10.0, digits - 1);
+        num /= MathUtil().pow(10.0, digits - 1);
 
         double y = (num - 1) / (num + 1);
 
@@ -78,7 +78,7 @@ public class LogUtil : Singleton!(LogUtil)
             auto pow_factor = i * 2;
             auto div_factor = i * 2 + 1;
 
-            result += MathUtil.instance.pow(y, pow_factor) / div_factor;
+            result += MathUtil().pow(y, pow_factor) / div_factor;
         }
 
         result *= 2 * y;
