@@ -28,6 +28,8 @@ TEST_TARGET = src/dmath/Test.d $(COMMON_SRC) $(PEGGED_SRC)
 # dmd flags
 DCC = dmd
 DFLAGS = -debug -g -unittest
+#DFLAGS = $(DFLAGS) -debug=Parser
+#DFLAGS = $(DFLAGS) -debug=ExpTree
 
 
 # Targets

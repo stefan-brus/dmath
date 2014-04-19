@@ -70,11 +70,17 @@ public class StringEvaluator
      *      The evaluated expression
      */
 
+    debug import std.stdio;
+
     public Exp eval ( string str )
     {
         auto parse_tree = this.parser.parse(strip(str));
 
+        debug ( Parser ) writefln("DEBUG (Parse tree): %s", parse_tree);
+
         auto exp = this.exp_builder.build(parse_tree);
+
+        debug ( ExpTree ) writefln("DEBUG (Exp tree): %s", exp.str);
 
         return TypeUtil().infer(exp);
     }
